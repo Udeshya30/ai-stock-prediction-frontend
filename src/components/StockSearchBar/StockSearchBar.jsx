@@ -17,11 +17,11 @@ const StockSearchBar = () => {
             placeholder="Enter stock symbol (e.g. AAPL)"
             value={symbol}
             onChange={(e) => setSymbol(e.target.value)}
-            className="form-control stock-input"
+            className="stock-input"
           />
         </div>
         <div className="col-12 col-md-4">
-          <button onClick={handleSearch} className="btn stock-search-button w-100">
+          <button onClick={handleSearch} className="stock-search-button w-100">
             Analyze Stock
           </button>
         </div>
