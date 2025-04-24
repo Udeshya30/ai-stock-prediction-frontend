@@ -7,7 +7,7 @@ const StockSearchBar = () => {
   const handleSearch = () => {
     console.log('Searching for stock symbol:', symbol);
   };
-
+//
   return (
     <section className="search-bar-panel container py-3">
       <div className="row justify-content-center text-center">
