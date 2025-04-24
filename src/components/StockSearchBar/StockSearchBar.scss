@@ -1,0 +1,20 @@
+@use '../../mixins.scss' as *;
+@use '../../variables.scss' as *;
+
+
+.stock-input {
+    background-color: #f0f8ff; /* Light blue color */
+    border-color: #ccc; /* Optional border color */
+  }
+  
+  .stock-search-button {
+    background-color: $button-color-dark;
+    border: none; 
+    color: $button-text-color;
+  }
+  
+  .stock-search-button:hover {
+    background-color: $button-color-hover-dark; /* Darker blue on hover */
+    color: $button-text-color;
+  }
+  

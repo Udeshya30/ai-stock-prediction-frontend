@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "ai-stock-prediction": "file:",
+    "bootstrap": "^5.3.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "scss": "^0.2.4"

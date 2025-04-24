@@ -10,6 +10,7 @@ $border-color: #DCDCDC; // Form fields, table borders, general UI borders
 $text-color: #333333; // Main body text, headings, labels
 $accent-color: #4F4F4F; // Main text, icons, borders
 $neutral-color: #8A8A8A; // Secondary text, disabled elements
+$button-text-color: #FFFFFF; // Button text color
 
 // State/Feedback Colors
 $success-color: #00B894; // Success feedback, positive growth
@@ -18,8 +19,23 @@ $error-color: #FF4F58; // Error feedback, negative stock trends
 $info-color: #76D7EA; // Informational feedback, neutral alerts
 
 // Button and Link Colors
-$button-color: #F0F8FF; // Secondary actions, less prominent buttons
+$button-color-light: #F0F8FF; // Secondary actions, less prominent buttons
+$button-hover-color-light: #c1def9; // hover
+
+$button-color-dark: #3F76E4; // Dominant buttons, active states, key actions
+$button-color-hover-dark: #2767e7; // Dominant buttons, active states, key actions
+
 $link-color: #1560BD; // Links, clickable elements
 
 // Highlight Colors
 $highlight-color: #FFF9C4; // Highlighted text or selected items
+
+
+$breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+);

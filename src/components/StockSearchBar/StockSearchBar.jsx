@@ -1,23 +1,32 @@
 import React, { useState } from 'react';
+import './StockSearchBar.scss'; 
 
 const StockSearchBar = () => {
   const [symbol, setSymbol] = useState('');
 
   const handleSearch = () => {
-    // You can add logic to fetch new stock data here based on the symbol entered
     console.log('Searching for stock symbol:', symbol);
   };
 
   return (
-    <div className="search-bar">
-      <input
-        type="text"
-        placeholder="Enter stock symbol (e.g. AAPL)"
-        value={symbol}
-        onChange={(e) => setSymbol(e.target.value)}
-      />
-      <button onClick={handleSearch}>Analyze Stock</button>
-    </div>
+    <section className="search-bar-panel container py-3">
+      <div className="row justify-content-center text-center">
+        <div className="col-12 col-md-8 mb-3">
+          <input
+            type="text"
+            placeholder="Enter stock symbol (e.g. AAPL)"
+            value={symbol}
+            onChange={(e) => setSymbol(e.target.value)}
+            className="form-control stock-input"
+          />
+        </div>
+        <div className="col-12 col-md-4">
+          <button onClick={handleSearch} className="btn stock-search-button w-100">
+            Analyze Stock
+          </button>
+        </div>
+      </div>
+    </section>
   );
 };
 
