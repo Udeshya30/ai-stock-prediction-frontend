@@ -10,7 +10,7 @@ const Header = () => {
 
   return (
     <div className="d-flex justify-content-between align-items-center border-bottom pb-2">
-      <h4 className="mb-0">Stock Whisper</h4>
+      <h4 className="mb-0">AI Stock Whisper</h4>
 
       <div className="d-flex align-items-center gap-3">
         <div className="input-group input-group-sm">
