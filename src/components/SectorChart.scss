@@ -1,0 +1,22 @@
+.sector-chart {
+  .legend {
+    font-size: 0.875rem;
+    color: #ccc;
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .fw-medium {
+      color: #fff;
+      margin-left: 4px;
+    }
+  }
+
+  .recharts-tooltip-label {
+    color: #fff !important;
+  }
+}

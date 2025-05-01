@@ -1,72 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import { getMockStockData, getGlobalNews, getIndiaNews, getMarketData } from './data/mockData'; 
-import Header from './components/Header/Header';
-import StockSearchBar from './components/StockSearchBar/StockSearchBar';
-import StockDetails from './components/StockDetails/StockDetails';
-import PredictionBox from './components/PredictionBox/PredictionBox';
-import StockNews from './components/StockNews/StockNews';
-import MarketOverview from './components/MarketOverview/MarketOverview';
-import AIRecommendation from './components/AIRecommendation/AIRecommendation';
+import React from "react";
+import "./styles/main.scss";
 
-function App() {
-  const [stockData, setStockData] = useState(null);
-  const [globalNews, setGlobalNews] = useState([]);
-  const [indiaNews, setIndiaNews] = useState([]);
-  const [marketData, setMarketData] = useState(null);
+import Header from "./components/Header";
+import StockCard from "./components/StockCard";
+import MacroPanel from "./components/MacroPanel";
+import PatternDetection from "./components/PatternDetection";
+import SectorChart from "./components/SectorChart";
+import TargetCard from "./components/TargetCard";
+import NewsFeed from "./components/NewsFeed";
+import StockNews from "./components/StockNews";
 
-  // Fetch mock data when the component mounts
-  useEffect(() => {
-    const stock = getMockStockData('AAPL'); 
-    setStockData(stock);
-
-    const global = getGlobalNews();
-    setGlobalNews(global);
-
-    const india = getIndiaNews();
-    setIndiaNews(india);
-
-    const market = getMarketData();
-    setMarketData(market);
-  }, []);
-
+const App = () => {
   return (
-    <>
+    <div className="container-fluid px-4 py-3">
       <Header />
-      <StockSearchBar />
-      {stockData && (
-        <>
-          <StockDetails data={stockData} />
-          <PredictionBox shortTerm={stockData.shortTerm} longTerm={stockData.longTerm} />
-          <StockNews news={stockData.news} />
-          {/* Global News Section */}
-          <div className="section global-news">
-            <h3>Global News</h3>
-            <ul>
-              {globalNews.map((article, index) => (
-                <li key={index}>
-                  <strong>{article.title}</strong> - {article.source} ({article.date})
-                </li>
-              ))}
-            </ul>
+      <div>
+        <div className="row col-12 g-3 mt-3">
+          <div className="col-4">
+            <StockCard />
           </div>
+          <div className="col-8">
+            <MacroPanel />
+            <PatternDetection />
+          </div>
+        </div>
+        <div className="row col-12 g-3">
+          <div className="col-4">
+            <SectorChart />
+            <div className="row">
+              <div className="col-6">
+                <TargetCard type="short" />
+              </div>
+              <div className="col-6">
+                <TargetCard type="long" />
+              </div>
+            </div>
+          </div>
+          <div className="col-8">
+            <StockNews />
+          </div>
+        </div>
 
-          {/* India News Section */}
-          <div className="section india-news">
-            <h3>India News</h3>
-            <ul>
-              {indiaNews.map((article, index) => (
-                <li key={index}>
-                  <strong>{article.title}</strong> - {article.source} ({article.date})
-                </li>
-              ))}
-            </ul>
+        <div className="row col-12 g-3">
+          <div className="col-6">
+            <NewsFeed title="India News & Sentiment" />
           </div>
-          <MarketOverview data={marketData} />
-          <AIRecommendation recommendation={stockData.recommendation} />
-        </>
-      )}
-    </>
+          <div className="col-6">
+            <NewsFeed title="Global News & Sentiment" />
+          </div>
+        </div>
+      </div>
+    </div>
   );
-}
+};
 
 export default App;

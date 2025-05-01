@@ -1,0 +1,27 @@
+// src/components/Header.scss
+.header-bar {
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.75rem;
+  
+    h4 {
+      font-weight: 600;
+    }
+  
+    .input-group {
+      background-color: #1f2233;
+      border-radius: 6px;
+  
+      input {
+        background: transparent;
+        color: #fff;
+        border: none;
+      }
+  
+      .input-group-text {
+        background: transparent;
+        border: none;
+        color: #fff;
+      }
+    }
+  }
+  

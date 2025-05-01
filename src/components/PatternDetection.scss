@@ -1,0 +1,23 @@
+.pattern-alert {
+    display: flex;
+    .icon-circle {
+      width: 42px;
+      height: 42px;
+      background-color: rgba(34, 197, 94, 0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+    }
+  
+    h6 {
+      font-weight: 600;
+      color: #fff;
+    }
+  
+    p {
+      font-size: 0.875rem;
+      color: #aaa;
+    }
+  }
+  

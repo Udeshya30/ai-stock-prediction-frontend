@@ -12,8 +12,12 @@
   "dependencies": {
     "ai-stock-prediction": "file:",
     "bootstrap": "^5.3.5",
+    "dayjs": "^1.11.13",
+    "lucide-react": "^0.503.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "recharts": "^2.15.3",
+    "sass": "^1.87.0",
     "scss": "^0.2.4"
   },
   "devDependencies": {
