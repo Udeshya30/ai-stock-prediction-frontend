@@ -1,3 +1,13 @@
+// @use './variables.scss' as *;
+
+// * {
+//   margin: 0;
+//   padding: 0;
+//   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+//   background-color: $background-color;
+// }
+
+
 @use './variables.scss' as *;
 
 * {
@@ -7,3 +17,18 @@
   background-color: $background-color;
 }
 
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.row.g-4 {
+  margin-left: -0.5rem; /* Adjust gutter */
+  margin-right: -0.5rem; /* Adjust gutter */
+}
+
+.col-md-8,
+.col-md-4 {
+  padding-left: 0.5rem; /* Adjust gutter */
+  padding-right: 0.5rem; /* Adjust gutter */
+}

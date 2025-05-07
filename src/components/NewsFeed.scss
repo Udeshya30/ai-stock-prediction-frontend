@@ -1,3 +1,68 @@
+// .news-feed {
+//   max-height: 320px;
+//   display: flex;
+//   flex-direction: column;
+
+//   .section-title {
+//     font-weight: 600;
+//     color: #fff;
+//     font-size: 1rem;
+//   }
+
+//   .news-scroll {
+//     overflow-y: auto;
+//     max-height: 250px;
+//     padding-right: 4px;
+
+//     &::-webkit-scrollbar {
+//       width: 6px;
+//     }
+
+//     &::-webkit-scrollbar-thumb {
+//       background-color: #4b5563;
+//       border-radius: 4px;
+//     }
+
+//     &::-webkit-scrollbar-track {
+//       background-color: transparent;
+//     }
+//   }
+
+//   .news-item {
+//     .news-title {
+//       font-weight: 500;
+//       color: #fff;
+//       font-size: 0.9rem;
+//     }
+
+//     .sentiment-tag {
+//       font-size: 0.75rem;
+//       padding: 2px 8px;
+//       border-radius: 12px;
+//       text-transform: capitalize;
+//       font-weight: 500;
+//       white-space: nowrap;
+
+//       &.positive {
+//         background-color: #14532d;
+//         color: #22c55e;
+//       }
+
+//       &.neutral {
+//         background-color: #3f3f46;
+//         color:  rgba($color: #ffffff, $alpha: 0.5);
+//       }
+
+//       &.negative {
+//         background-color: #4c1d1d;
+//         color: #ef4444;
+//       }
+//     }
+//   }
+// }
+
+
+// NewsFeed.scss
 .news-feed {
   max-height: 320px;
   display: flex;
@@ -7,12 +72,14 @@
     font-weight: 600;
     color: #fff;
     font-size: 1rem;
+    margin-bottom: 0.75rem; // Reduced bottom margin for spacing
   }
 
   .news-scroll {
     overflow-y: auto;
     max-height: 250px;
     padding-right: 4px;
+    margin-bottom: 0.5rem; // Added bottom margin for spacing
 
     &::-webkit-scrollbar {
       width: 6px;
@@ -29,33 +96,64 @@
   }
 
   .news-item {
+    display: flex; // Ensure flexbox is used
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0.5rem 0; // Added padding for vertical spacing
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); // Added subtle divider
+    margin-bottom: 0.5rem; // Reduced bottom margin
+
+    &:last-child {
+      border-bottom: none; // Remove border from last item
+      margin-bottom: 0;   // Remove bottom margin from last item
+    }
+
     .news-title {
       font-weight: 500;
       color: #fff;
       font-size: 0.9rem;
+      line-height: 1.4; // Improved line height for readability
     }
 
     .sentiment-tag {
       font-size: 0.75rem;
-      padding: 2px 8px;
-      border-radius: 12px;
+      padding: 0.25rem 0.5rem; // Adjusted padding
+      border-radius: 0.5rem; // Adjusted border radius
       text-transform: capitalize;
       font-weight: 500;
       white-space: nowrap;
+      align-self: center; // Vertically center the tag
 
       &.positive {
-        background-color: #14532d;
+        background-color: rgba(34, 197, 94, 0.2); // Soft background
         color: #22c55e;
       }
 
       &.neutral {
-        background-color: #3f3f46;
-        color:  rgba($color: #ffffff, $alpha: 0.5);
+        background-color: rgba(163, 153, 153, 0.2);
+        color: rgba(255, 255, 255, 0.7); // Slightly less opaque
       }
 
       &.negative {
-        background-color: #4c1d1d;
+        background-color: rgba(239, 68, 68, 0.2); // Soft background
         color: #ef4444;
+      }
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    max-height: none; // Allow full height on smaller screens
+    overflow: visible;
+
+    .news-scroll {
+      max-height: none;
+      overflow-y: visible;
+      padding-right: 0;
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+      &::-webkit-scrollbar {
+        display: none; /* Hide scrollbar on Chrome, Safari and Opera */
       }
     }
   }

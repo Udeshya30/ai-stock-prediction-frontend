@@ -1,17 +1,62 @@
+// // src/components/TargetCard.scss
+// .card-dark {
+//     h6 {
+//       font-size: 1rem;
+//       color: #fff;
+//     }
+  
+//     p {
+//       font-size: 0.9rem;
+//       color: #ccc;
+//     }
+  
+//     strong {
+//       color: #fff;
+//     }
+//   }
+  
+
 // src/components/TargetCard.scss
-.card-dark {
-    h6 {
-      font-size: 1rem;
+.target-card {
+  .target-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  .target-sentiment {
+    font-size: 0.875rem;
+    color: #a1a1aa;
+    margin-bottom: 0.75rem;
+  }
+
+  .target-price {
+    font-size: 0.9rem;
+    color: #ccc;
+
+    .target-value {
       color: #fff;
-    }
-  
-    p {
-      font-size: 0.9rem;
-      color: #ccc;
-    }
-  
-    strong {
-      color: #fff;
+      font-weight: 500;
     }
   }
-  
+
+  // Responsive adjustments for small screens
+  @media (max-width: 576px) {
+    text-align: center; // Center align content
+
+    .target-title {
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .target-sentiment {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .target-price {
+      font-size: 1rem;
+    }
+  }
+}

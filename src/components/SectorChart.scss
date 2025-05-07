@@ -1,22 +1,83 @@
+// .sector-chart {
+//   .legend {
+//     font-size: 0.875rem;
+//     color: #ccc;
+
+//     .legend-dot {
+//       width: 10px;
+//       height: 10px;
+//       border-radius: 50%;
+//       display: inline-block;
+//     }
+
+//     .fw-medium {
+//       color: #fff;
+//       margin-left: 4px;
+//     }
+//   }
+
+//   .recharts-tooltip-label {
+//     color: #fff !important;
+//   }
+// }
+
+
 .sector-chart {
-  .legend {
+  .section-title {
+    font-weight: 600;
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .chart-legend {
     font-size: 0.875rem;
     color: #ccc;
+    margin-top: 1rem;
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 
     .legend-dot {
-      width: 10px;
-      height: 10px;
+      width: 0.625rem;
+      height: 0.625rem;
       border-radius: 50%;
       display: inline-block;
     }
 
-    .fw-medium {
-      color: #fff;
-      margin-left: 4px;
+    .legend-label {
+      font-size: 0.75rem;
+      color: #a1a1aa;
     }
+
+    .legend-value {
+      color: #fff;
+      font-weight: 500;
+    }
+  }
+
+  .recharts-tooltip-content {
+    background-color: #1f2937 !important;
+    border: none !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
 
   .recharts-tooltip-label {
     color: #fff !important;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .recharts-tooltip-item-name {
+    color: #a1a1aa !important;
+    font-size: 0.75rem;
+  }
+
+  .recharts-tooltip-item-value {
+    color: #fff !important;
+    font-weight: 500;
   }
 }

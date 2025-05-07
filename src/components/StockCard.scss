@@ -1,46 +1,183 @@
-@import '../styles/variables.scss';
+// @use '../styles/variables.scss' as *;
+
+// .stock-card {
+//   .badge.exchange-badge {
+//     background-color: #14532d;
+//     color: #22c55e;
+//     font-size: 0.75rem;
+//     padding: 4px 10px;
+//     border-radius: 999px;
+//   }
+
+//   .stock-price {
+//     font-size: 1.75rem;
+//     font-weight: 600;
+
+//     .price-change {
+//       color: #22c55e;
+//       font-size: 1rem;
+//       font-weight: 500;
+//       margin-left: 8px;
+//     }
+//   }
+
+//   .separator {
+//     height: 1px;
+//     border-top: 2px solid #2563eb;
+//     margin-top: 1rem;
+//     margin-bottom: 1rem;
+//   }
+
+//   .info-box {
+//     background-color: rgba(255, 255, 255, 0.05);
+//     border-radius: 12px;
+//     padding: 1rem;
+
+//     .label {
+//       color: #a1a1aa;
+//       font-size: 0.75rem;
+//     }
+
+//     .value {
+//       font-size: 1rem;
+//       font-weight: 500;
+//     }
+//   }
+// }
+
+
+// StockCard.scss
+@use '../styles/variables.scss' as *;
 
 .stock-card {
-  .badge.exchange-badge {
-    background-color: #14532d;
+  .stock-header {
+    margin-bottom: 0.75rem;
+  }
+
+  .stock-title {
+    .stock-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: #fff;
+    }
+
+    .stock-company-name {
+      color: #a1a1aa;
+      font-size: 0.875rem;
+    }
+  }
+
+  .exchange-badge {
+    background-color: rgba(20, 83, 45, 0.8); // Slightly transparent
     color: #22c55e;
     font-size: 0.75rem;
-    padding: 4px 10px;
+    padding: 0.25rem 0.6rem;
     border-radius: 999px;
+    font-weight: 500;
   }
 
-  .stock-price {
-    font-size: 1.75rem;
-    font-weight: 600;
-
-    .price-change {
-      color: #22c55e;
-      font-size: 1rem;
-      font-weight: 500;
-      margin-left: 8px;
-    }
-  }
-
-  .separator {
-    height: 1px;
-    border-top: 2px solid #2563eb;
-    margin-top: 1rem;
+  .stock-price-section {
     margin-bottom: 1rem;
-  }
 
-  .info-box {
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 1rem;
+    .stock-price {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #fff;
 
-    .label {
-      color: #a1a1aa;
-      font-size: 0.75rem;
+      .price-change {
+        color: #22c55e;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-left: 0.5rem;
+      }
     }
 
-    .value {
-      font-size: 1rem;
-      font-weight: 500;
+    .separator {
+      height: 2px;
+      background-color: rgba(37, 99, 235, 0.3); // Slightly transparent
+      margin-top: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  .stock-info {
+    display: flex;          // Use flexbox for the row
+    flex-wrap: wrap;        // Allow items to wrap to the next row
+    .info-item {
+      width: 50%;           // Default width for two columns
+      margin-bottom: 0.5rem;
+      box-sizing: border-box; // Include padding in width
+      padding-right: 0.25rem;  // Add some spacing between items (right)
+      padding-left: 0.25rem;   // Add some spacing between items (left)
+    }
+
+    .info-box {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 0.75rem;
+      padding: 0.75rem;
+      transition: background-color 0.3s ease;
+      height: 100%;         // Ensure all boxes have the same height
+
+      .info-label {
+        color: #a1a1aa;
+        font-size: 0.75rem;
+        margin-bottom: 0.25rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .info-value {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 576px) {
+    .stock-title {
+      .stock-name {
+        font-size: 1.125rem;
+      }
+      .stock-company-name {
+        font-size: 0.75rem;
+      }
+    }
+
+    .stock-price-section {
+      .stock-price {
+        font-size: 1.25rem;
+        .price-change {
+          font-size: 0.75rem;
+        }
+      }
+    }
+
+    .stock-info {
+      .info-item {
+        width: 100%;       // Take full width on small screens
+        padding-right: 0;  // Remove horizontal padding
+        padding-left: 0;
+      }
+      .info-box {
+        padding: 0.5rem;
+        .info-label {
+          font-size: 0.625rem;
+        }
+        .info-value {
+          font-size: 0.875rem;
+        }
+      }
     }
   }
 }

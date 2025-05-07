@@ -55,3 +55,61 @@ const App = () => {
 };
 
 export default App;
+
+
+
+// import React from 'react';
+// import Header from './components/Header';
+// import MacroPanel from './components/MacroPanel';
+// import NewsFeed from './components/NewsFeed';
+// import PatternDetection from './components/PatternDetection';
+// import SectorChart from './components/SectorChart';
+// import StockCard from './components/StockCard';
+// import TargetCard from './components/TargetCard';
+// import StockNews from './components/StockNews';
+// import './styles/App.scss';
+// import './styles/main.scss';
+
+// const App = () => {
+//   return (
+//     <div className="container mt-4">
+//       <Header />
+
+//       <MacroPanel />
+
+//       <div className="row g-4">
+//         <div className="col-md-8">
+//           <div className="row g-4">
+//             <div className="col-md-6">
+//               <StockCard />
+//             </div>
+//             <div className="col-md-6">
+//               <TargetCard type="short" />
+//             </div>
+//             <div className="col-md-6">
+//               <TargetCard type="long" />
+//             </div>
+//             <div className="col-md-6">
+//               <PatternDetection />
+//             </div>
+//           </div>
+//         </div>
+
+//         <div className="col-md-4">
+//           <NewsFeed title="India News & Sentiment" />
+//         </div>
+//       </div>
+
+//       <div className="row g-4 mt-4">
+//         <div className="col-md-8">
+//           <StockNews />
+//         </div>
+//         <div className="col-md-4">
+//           <SectorChart />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default App;

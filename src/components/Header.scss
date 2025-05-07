@@ -1,27 +1,94 @@
-// src/components/Header.scss
+// // src/components/Header.scss
+// .header-bar {
+//     border-bottom: 1px solid #333;
+//     padding-bottom: 0.75rem;
+  
+//     h4 {
+//       font-weight: 600;
+//     }
+  
+//     .input-group {
+//       background-color: #1f2233;
+//       border-radius: 6px;
+  
+//       input {
+//         background: transparent;
+//         color: #fff;
+//         border: none;
+//       }
+  
+//       .input-group-text {
+//         background: transparent;
+//         border: none;
+//         color: #fff;
+//       }
+//     }
+//   }
+  
+// Header.scss
 .header-bar {
-    border-bottom: 1px solid #333;
-    padding-bottom: 0.75rem;
-  
-    h4 {
-      font-weight: 600;
+  padding: 1rem 1.5rem;
+
+  h4 {
+    font-weight: 600;
+    margin-bottom: 0;
+  }
+
+  .input-group {
+    max-width: 200px; // Adjust as needed
+    border-radius: 5px;
+    overflow: hidden; // To contain the border-radius of the group
+
+    .input-group-text {
+      background-color: transparent;
+      border: none;
+      border-right: 1px solid #343a40; // Add a separator
     }
-  
-    .input-group {
-      background-color: #1f2233;
-      border-radius: 6px;
-  
-      input {
-        background: transparent;
-        color: #fff;
-        border: none;
+
+    input.form-control {
+      background-color: transparent !important; // Override Bootstrap
+      border: none;
+      color: white !important; // Override Bootstrap
+      &::placeholder {
+        color: #6c757d; // Adjust placeholder color
       }
-  
-      .input-group-text {
-        background: transparent;
-        border: none;
-        color: #fff;
+      &:focus {
+        box-shadow: none; // Remove focus outline
       }
     }
   }
-  
+
+  .current-time {
+    font-size: 0.9rem;
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+
+    h4 {
+      margin-bottom: 0.5rem;
+    }
+
+    .d-flex {
+      width: 100%;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+
+      .input-group {
+        max-width: 100%;
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    .current-time {
+      display: none; // Hide time on very small screens
+    }
+  }
+}

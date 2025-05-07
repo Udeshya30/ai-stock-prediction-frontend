@@ -1,24 +1,73 @@
+// .macro-panel {
+//   .macro-box {
+//     background-color: rgba(255, 255, 255, 0.05); 
+//     border-radius: 10px;
+//     padding: 0.75rem; // reduced padding
+
+//     .macro-label {
+//       font-size: 0.7rem; // smaller label
+//       color: #a1a1aa;
+//       margin-bottom: 0.2rem;
+//     }
+
+//     .macro-value {
+//       font-size: 1rem; // reduced from 1.2rem
+//       font-weight: 600;
+//       color: #fff;
+//     }
+
+//     .macro-change {
+//       font-size: 0.75rem; // reduced from 0.875rem
+//       font-weight: 500;
+//     }
+
+//     .text-success {
+//       color: #22c55e;
+//     }
+
+//     .text-danger {
+//       color: #ef4444;
+//     }
+
+//     .text-warning {
+//       color: #e1e1e1;
+//     }
+//   }
+// }
+
+
+// MacroPanel.scss
 .macro-panel {
   .macro-box {
-    background-color: rgba(255, 255, 255, 0.05); 
+    background-color: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
-    padding: 0.75rem; // reduced padding
+    padding: 0.75rem;
+    transition: background-color 0.3s ease; // Smooth hover effect
 
     .macro-label {
-      font-size: 0.7rem; // smaller label
+      font-size: 0.7rem;
       color: #a1a1aa;
       margin-bottom: 0.2rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .macro-value {
-      font-size: 1rem; // reduced from 1.2rem
+      font-size: 1rem;
       font-weight: 600;
       color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .macro-change {
-      font-size: 0.75rem; // reduced from 0.875rem
+      font-size: 0.75rem;
       font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .text-success {
@@ -31,6 +80,46 @@
 
     .text-warning {
       color: #e1e1e1;
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1); // Slightly darker on hover
+    }
+  }
+
+  // Responsive adjustments for tablets
+  @media (max-width: 992px) {
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .col-lg-2 {
+      flex: 0 0 33.33%;
+      max-width: 33.33%;
+    }
+  }
+
+  // Responsive adjustments for smaller phones
+  @media (max-width: 576px) {
+    .col-sm-4 {
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+    .macro-box {
+      padding: 0.5rem; // Further reduce padding on small screens
+    }
+  }
+
+  // Responsive adjustment for very small screens (e.g., narrow phones)
+  @media (max-width: 400px) {
+    .col-6, // Reset the default Bootstrap col-6
+    .col-sm-4,
+    .col-lg-2 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+    .macro-box {
+      padding: 0.75rem; // Restore some padding for better spacing
     }
   }
 }
