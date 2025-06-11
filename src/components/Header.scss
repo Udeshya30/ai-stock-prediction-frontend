@@ -1,30 +1,3 @@
-// // src/components/Header.scss
-// .header-bar {
-//     border-bottom: 1px solid #333;
-//     padding-bottom: 0.75rem;
-  
-//     h4 {
-//       font-weight: 600;
-//     }
-  
-//     .input-group {
-//       background-color: #1f2233;
-//       border-radius: 6px;
-  
-//       input {
-//         background: transparent;
-//         color: #fff;
-//         border: none;
-//       }
-  
-//       .input-group-text {
-//         background: transparent;
-//         border: none;
-//         color: #fff;
-//       }
-//     }
-//   }
-  
 // Header.scss
 .header-bar {
   padding: 1rem 1.5rem;
@@ -61,6 +34,16 @@
   .current-time {
     font-size: 0.9rem;
   }
+
+  .suggestions-dropdown {
+    max-height: 250px;
+    overflow-y: auto;
+    background-color: #212529;
+    border: 1px solid #343a40;
+    border-top: none;
+    z-index: 1000;
+  }
+
 
   // Responsive adjustments
   @media (max-width: 768px) {
