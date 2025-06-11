@@ -14,8 +14,8 @@ const App = () => {
   return (
     <div className="container-fluid px-4 py-3">
       <Header />
+      
       <div>
-        
         <div className="row col-12 g-3 mt-3">
           <div className="col-4">
             <StockCard />

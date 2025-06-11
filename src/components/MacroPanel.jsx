@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./MacroPanel.scss";
+import Loader from "./Loader";
 
 // Utility to style change values
 const getChangeClass = (change) => {
@@ -69,7 +70,7 @@ const MacroPanel = () => {
       });
   }, []);
 
-  if (loading) return <div>Loading Macro Data...</div>;
+  if (loading) return <Loader />//<div>Loading Macro Data...</div>;
   if (error) return <div style={{ color: "red" }}>{error}</div>;
 
   return (
