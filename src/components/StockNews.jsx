@@ -15,7 +15,20 @@ const StockNews = ({ ticker }) => {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          const items = (data.data.headlines || []).map((item) => ({
+          // const items = (data.data.headlines || []).map((item) => ({
+          //   title: item.title,
+          //   date: item.date || "Unknown",
+          //   sentiment:
+          //     item.sentiment > 0.1
+          //       ? "positive"
+          //       : item.sentiment < -0.1
+          //       ? "negative"
+          //       : "neutral",
+          //   sentimentValue: item.sentiment.toFixed(2),
+          //   emoji: item.emoji,
+          // }));
+          const items = (data.data.headlines || [])
+          .map((item) => ({
             title: item.title,
             date: item.date || "Unknown",
             sentiment:
@@ -26,7 +39,9 @@ const StockNews = ({ ticker }) => {
                 : "neutral",
             sentimentValue: item.sentiment.toFixed(2),
             emoji: item.emoji,
-          }));
+          }))
+          .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date descending
+
 
           setNewsList(items);
         } else {

@@ -33,19 +33,37 @@ const NewsFeed = ({ title }) => {
           const mappedTitle =
             title === "India News & Sentiment" ? "India Markets" : "US Markets";
 
-          const items = data.data[mappedTitle]?.map((item) => {
-            let sentimentLabel = "neutral";
-            if (item.sentiment > 0.1) sentimentLabel = "positive";
-            else if (item.sentiment < -0.1) sentimentLabel = "negative";
+          // const items = data.data[mappedTitle]?.map((item) => {
+          //   let sentimentLabel = "neutral";
+          //   if (item.sentiment > 0.1) sentimentLabel = "positive";
+          //   else if (item.sentiment < -0.1) sentimentLabel = "negative";
 
-            return {
-              title: item.title,
-              date: toIndiaTime(item.date),
-              sentiment: sentimentLabel,
-              sentimentValue: item.sentiment.toFixed(2),
-              emoji: item.emoji,
-            };
-          }) || [];
+          //   return {
+          //     title: item.title,
+          //     date: toIndiaTime(item.date),
+          //     sentiment: sentimentLabel,
+          //     sentimentValue: item.sentiment.toFixed(2),
+          //     emoji: item.emoji,
+          //   };
+          // }) || [];
+          const items =
+          data.data[mappedTitle]
+            ?.slice()
+            .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort by raw date (newest to oldest)
+            .map((item) => {
+              let sentimentLabel = "neutral";
+              if (item.sentiment > 0.1) sentimentLabel = "positive";
+              else if (item.sentiment < -0.1) sentimentLabel = "negative";
+
+              return {
+                title: item.title,
+                date: toIndiaTime(item.date), // Convert to IST only after sorting
+                sentiment: sentimentLabel,
+                sentimentValue: item.sentiment.toFixed(2),
+                emoji: item.emoji,
+              };
+            }) || [];
+
 
           setNewsList(items);
         } else {
