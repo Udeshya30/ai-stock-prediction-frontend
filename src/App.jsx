@@ -1,57 +1,58 @@
 import React from "react";
 import "./styles/main.scss";
 
+import { useStock } from "./context/StockContext";
 import Header from "./components/Header";
 import StockCard from "./components/StockCard";
 import MacroPanel from "./components/MacroPanel";
+import FiiDiiPanel from "./components/FiiDiiPanel";
 import PatternDetection from "./components/PatternDetection";
 import SectorChart from "./components/SectorChart";
 import TargetCard from "./components/TargetCard";
 import NewsFeed from "./components/NewsFeed";
 import StockNews from "./components/StockNews";
+import PipelineRunner from "./components/PipelineRunner";
 
 const App = () => {
+  const { selectedStock } = useStock();
+
   return (
-    <div className="container-fluid px-4 py-3">
+    <div className="app-layout">
       <Header />
-      
-      <div>
-        <div className="row col-12 g-3 mt-3">
-          <div className="col-4">
+      <main className="main-content">
+
+        {/* ── Always visible: Market overview ── */}
+        <MacroPanel />
+        <FiiDiiPanel />
+
+        {/* ── Stock selected: AI analysis ── */}
+        {selectedStock && (
+          <>
             <StockCard />
-          </div>
-          <div className="col-8">
-            <MacroPanel />
-            <PatternDetection />
-          </div>
-        </div>
-        <div className="row col-12 g-3">
-          <div className="col-4">
-            <SectorChart />
-            <div className="row">
-              <div className="col-6">
-                <TargetCard type="short" />
+            <PipelineRunner />
+            <div className="analysis-grid">
+              <div className="analysis-left">
+                <SectorChart />
+                <div className="targets-row">
+                  <TargetCard type="short" />
+                  <TargetCard type="long" />
+                </div>
               </div>
-              <div className="col-6">
-                <TargetCard type="long" />
+              <div className="analysis-right">
+                <PatternDetection />
+                <StockNews />
               </div>
             </div>
-          </div>
-          <div className="col-8">
-            <StockNews />
-          </div>
+          </>
+        )}
+
+        {/* ── Always visible: News feed ── */}
+        <div className="news-grid">
+          <NewsFeed title="India News & Sentiment" />
+          <NewsFeed title="Global News & Sentiment" />
         </div>
 
-        <div className="row col-12 g-3 mt-3">
-          <div className="col-6">
-            <NewsFeed title="India News & Sentiment" />
-          </div>
-          <div className="col-6">
-            <NewsFeed title="Global News & Sentiment" />
-          </div>
-        </div>
-        
-      </div>
+      </main>
     </div>
   );
 };

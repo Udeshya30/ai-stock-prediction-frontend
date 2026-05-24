@@ -78,24 +78,32 @@ const NewsFeed = ({ title }) => {
       });
   }, [title]);
 
+  const sentimentLabel = { positive: 'Bullish', neutral: 'Neutral', negative: 'Bearish' };
+  const titleIcon = title.includes('India') ? '🇮🇳' : '🌐';
+
   return (
-    <div className="card-dark news-feed">
-      <h6 className="section-title mb-3">{title}</h6>
+    <div className="news-feed">
+      <div className="nf-header">
+        <span className="section-label">{title}</span>
+        <span className="nf-icon">{titleIcon}</span>
+      </div>
       <div className="news-scroll">
         {loading ? (
-          <div className="text-muted">Loading...</div>
+          <div className="nf-state">Loading…</div>
         ) : error ? (
-          <div className="text-danger">{error}</div>
+          <div className="nf-state nf-error">{error}</div>
+        ) : newsList.length === 0 ? (
+          <div className="nf-state">No news available</div>
         ) : (
           newsList.map((news, idx) => (
-            <div key={idx} className="news-item">
-              <div className="news-main-row">
-                <div className="news-title">{news.title}</div>
+            <div key={idx} className={`news-item ${news.sentiment}`}>
+              <div className="news-title">{news.title}</div>
+              <div className="news-footer">
+                <span className="news-date">{news.date}</span>
                 <span className={`sentiment-tag ${news.sentiment}`}>
-                  {news.emoji} {news.sentiment} ({news.sentimentValue})
+                  {news.emoji} {sentimentLabel[news.sentiment] || news.sentiment}
                 </span>
               </div>
-              <div className="news-date">{news.date}</div>
             </div>
           ))
         )}

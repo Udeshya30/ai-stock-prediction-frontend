@@ -1,100 +1,100 @@
 import React, { useEffect, useState } from "react";
 import "./MacroPanel.scss";
-import Loader from "./Loader";
-
-// Utility to style change values
-const getChangeClass = (change) => {
-  if (!change) return "text-warning";
-  if (change.startsWith("+")) return "text-success";
-  if (change.startsWith("-")) return "text-danger";
-  return "text-warning";
-};
 
 const MacroPanel = () => {
   const [metrics, setMetrics] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/macro-trends")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          const d = data.data;
-
-          const newMetrics = [
-            {
-              label: "USD/INR",
-              value: d["USD/INR"]?.price || "",//"N/A",
-              change:
-                d["USD/INR"]?.score !== undefined
-                  ? d["USD/INR"].score.toFixed(2)
-                  : "",
-              sentiment: d["USD/INR"]?.sentiment || "",
-            },
-            {
-              label: "Repo Rate",
-              value: d["RBI Repo Rate"]?.rate || "",//"N/A",
-              change: "0.00",
-              sentiment: d["RBI Repo Rate"]?.sentiment || "",
-            },
-            {
-              label: "Gold",
-              value: d["Gold"]?.price || "",//"N/A",
-              change:
-                d["Gold"]?.score !== undefined
-                  ? d["Gold"].score.toFixed(2)
-                  : "",
-              sentiment: d["Gold"]?.sentiment || "",
-            },
-            {
-              label: "Crude",
-              value: d["Brent Crude"]?.price || "",//"N/A",
-              change:
-                d["Brent Crude"]?.score !== undefined
-                  ? d["Brent Crude"].score.toFixed(2)
-                  : "",
-              sentiment: d["Brent Crude"]?.sentiment || "",
-            },
-          ];
-
-          setMetrics(newMetrics);
-        } else {
-          setError("Failed to fetch macro trends");
-        }
-        setLoading(false);
+      .then(r => r.json())
+      .then(data => {
+        if (!data.success) return;
+        const d = data.data;
+        setMetrics([
+          {
+            label: "USD / INR",
+            value: d["USD/INR"]?.price || "—",
+            score: d["USD/INR"]?.score,
+            sentiment: d["USD/INR"]?.sentiment || "",
+            icon: "💵",
+          },
+          {
+            label: "Repo Rate",
+            value: d["RBI Repo Rate"]?.price || d["RBI Repo Rate"]?.rate || "6.50%",
+            score: 0,
+            sentiment: d["RBI Repo Rate"]?.sentiment || "",
+            icon: "🏦",
+          },
+          {
+            label: "Gold",
+            value: d["Gold"]?.price || "—",
+            score: d["Gold"]?.score,
+            sentiment: d["Gold"]?.sentiment || "",
+            icon: "🥇",
+          },
+          {
+            label: "Brent Crude",
+            value: d["Brent Crude"]?.price || "—",
+            score: d["Brent Crude"]?.score,
+            sentiment: d["Brent Crude"]?.sentiment || "",
+            icon: "🛢️",
+          },
+        ]);
       })
-      .catch((e) => {
-        setError("Error fetching macro trends");
-        setLoading(false);
-      });
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <Loader />//<div>Loading Macro Data...</div>;
-  if (error) return <div style={{ color: "red" }}>{error}</div>;
+  const scoreClass = (score) => {
+    if (score == null) return "";
+    if (score > 0.1) return "positive";
+    if (score < -0.1) return "negative";
+    return "neutral";
+  };
+
+  const scoreLabel = (score) => {
+    if (score == null) return "";
+    const sign = score > 0 ? "+" : "";
+    return `${sign}${score.toFixed(2)}`;
+  };
+
+  if (loading) {
+    return (
+      <div className="macro-panel">
+        <div className="macro-grid">
+          {[1, 2, 3, 4].map(i => (
+            <div key={i} className="macro-box macro-box--skeleton">
+              <span className="shimmer" style={{ display: 'block', height: 10, width: '60%', borderRadius: 4, marginBottom: 8 }} />
+              <span className="shimmer" style={{ display: 'block', height: 18, width: '80%', borderRadius: 4, marginBottom: 6 }} />
+              <span className="shimmer" style={{ display: 'block', height: 10, width: '40%', borderRadius: 4 }} />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="card-dark macro-panel">
-      <h6 className="mb-3">Macro & Global</h6>
-      <div className="row g-3">
-        {metrics.map((m, idx) => (
-          <div className="col-6 col-sm-4 col-lg-2" key={idx}>
-            <div className="macro-box">
-              <div className="macro-label">{m.label}</div>
-              <div className="macro-value">{m.value}</div>
-              <div
-                className={`macro-change ${getChangeClass(
-                  m.change.startsWith("-") ? m.change : "+" + m.change
-                )}`}
-              >
-                {m.change && (m.change > 0 ? "+" : "") + m.change}
+    <div className="macro-panel">
+      <div className="macro-grid">
+        {metrics.map(m => {
+          const cls = scoreClass(m.score);
+          return (
+            <div key={m.label} className="macro-box">
+              <div className="macro-top">
+                <span className="macro-icon">{m.icon}</span>
+                <span className="macro-label">{m.label}</span>
               </div>
-              {/* <div className="macro-sentiment small text-muted">
-                {m.sentiment}
-              </div> */}
+              <div className="macro-value">{m.value}</div>
+              {m.score != null && (
+                <div className={`macro-score score-${cls}`}>
+                  {scoreLabel(m.score)}
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

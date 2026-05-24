@@ -1,0 +1,191 @@
+// FiiDiiPanel.scss
+.fiidii-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+  margin-bottom: var(--gap);
+
+  .fd-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.875rem;
+
+    .fd-date {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .fd-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      letter-spacing: 0.04em;
+
+      &--na {
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text-muted);
+      }
+    }
+  }
+
+  // ── 2-column grid ──
+  .fd-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 0.875rem;
+  }
+
+  // ── individual card ──
+  .fd-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 0.875rem;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      border-radius: 3px 0 0 3px;
+    }
+
+    &--buy::before  { background: var(--success); }
+    &--sell::before { background: var(--danger); }
+    &--neutral::before { background: var(--text-muted); }
+
+    &--skeleton { opacity: 0.6; }
+
+    .fd-card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      margin-bottom: 0.5rem;
+
+      .fd-icon { font-size: 1.1rem; margin-top: 2px; flex-shrink: 0; }
+      .fd-label { font-size: 0.82rem; font-weight: 700; color: var(--text-primary); }
+      .fd-sub   { font-size: 0.68rem; color: var(--text-muted); }
+    }
+
+    .fd-amount {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.2rem;
+      font-variant-numeric: tabular-nums;
+
+      &--buy  { color: var(--success); }
+      &--sell { color: var(--danger); }
+      &--neutral { color: var(--text-muted); }
+    }
+
+    .fd-dir {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+
+      &--buy  { color: var(--success); }
+      &--sell { color: var(--danger); }
+      &--neutral { color: var(--text-muted); }
+    }
+  }
+
+  // ── interpretation bar ──
+  .fd-interpretation {
+    border-radius: var(--radius-md);
+    padding: 0.6rem 0.875rem;
+    border-left: 3px solid;
+
+    &--very-bullish {
+      background: var(--success-dim);
+      border-color: var(--success);
+      .fd-interp-label { color: var(--success); }
+    }
+    &--bullish {
+      background: rgba(16, 217, 124, 0.07);
+      border-color: rgba(16, 217, 124, 0.5);
+      .fd-interp-label { color: #4ae89e; }
+    }
+    &--cautious {
+      background: var(--warning-dim);
+      border-color: var(--warning);
+      .fd-interp-label { color: var(--warning); }
+    }
+    &--very-bearish {
+      background: var(--danger-dim);
+      border-color: var(--danger);
+      .fd-interp-label { color: var(--danger); }
+    }
+    &--neutral {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--border);
+      .fd-interp-label { color: var(--text-muted); }
+    }
+
+    .fd-interp-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .fd-interp-desc {
+      font-size: 0.73rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+  }
+
+  // ── unavailable state ──
+  .fd-unavailable {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--bg-raised);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 0.875rem;
+
+    .fd-unavail-icon { font-size: 1.5rem; flex-shrink: 0; }
+
+    .fd-unavail-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.2rem;
+    }
+
+    .fd-unavail-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+  }
+
+  .fd-retry {
+    margin-left: auto;
+    flex-shrink: 0;
+    background: transparent;
+    border: 1px solid var(--border-active);
+    color: var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 0.3rem 0.8rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+
+    &:hover { background: var(--accent-dim); }
+  }
+
+  @media (max-width: 600px) {
+    .fd-grid { grid-template-columns: 1fr; }
+    .fd-unavailable { flex-wrap: wrap; }
+    .fd-retry { margin-left: 0; }
+  }
+}

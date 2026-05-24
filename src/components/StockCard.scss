@@ -1,183 +1,214 @@
-// @use '../styles/variables.scss' as *;
-
-// .stock-card {
-//   .badge.exchange-badge {
-//     background-color: #14532d;
-//     color: #22c55e;
-//     font-size: 0.75rem;
-//     padding: 4px 10px;
-//     border-radius: 999px;
-//   }
-
-//   .stock-price {
-//     font-size: 1.75rem;
-//     font-weight: 600;
-
-//     .price-change {
-//       color: #22c55e;
-//       font-size: 1rem;
-//       font-weight: 500;
-//       margin-left: 8px;
-//     }
-//   }
-
-//   .separator {
-//     height: 1px;
-//     border-top: 2px solid #2563eb;
-//     margin-top: 1rem;
-//     margin-bottom: 1rem;
-//   }
-
-//   .info-box {
-//     background-color: rgba(255, 255, 255, 0.05);
-//     border-radius: 12px;
-//     padding: 1rem;
-
-//     .label {
-//       color: #a1a1aa;
-//       font-size: 0.75rem;
-//     }
-
-//     .value {
-//       font-size: 1rem;
-//       font-weight: 500;
-//     }
-//   }
-// }
-
-
-// StockCard.scss
 @use '../styles/variables.scss' as *;
 
-.stock-card {
-  .stock-header {
-    margin-bottom: 0.75rem;
+// StockCard.scss – full-width stock banner
+.stock-banner {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.1rem 1.5rem;
+  margin-bottom: var(--gap);
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.25s;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 3px 0 0 3px;
+    background: var(--text-muted);
   }
+  &--up::before    { background: var(--success); }
+  &--down::before  { background: var(--danger); }
+  &--flat::before  { background: var(--warning); }
 
-  .stock-title {
-    .stock-name {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-      color: #fff;
-    }
+  // Empty state
+  &--empty {
+    justify-content: center;
+    min-height: 88px;
+    border-style: dashed;
 
-    .stock-company-name {
-      color: #a1a1aa;
-      font-size: 0.875rem;
-    }
-  }
+    .sb-empty {
+      text-align: center;
 
-  .exchange-badge {
-    background-color: rgba(20, 83, 45, 0.8); // Slightly transparent
-    color: #22c55e;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.6rem;
-    border-radius: 999px;
-    font-weight: 500;
-  }
-
-  .stock-price-section {
-    margin-bottom: 1rem;
-
-    .stock-price {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #fff;
-
-      .price-change {
-        color: #22c55e;
-        font-size: 0.875rem;
-        font-weight: 500;
-        margin-left: 0.5rem;
-      }
-    }
-
-    .separator {
-      height: 2px;
-      background-color: rgba(37, 99, 235, 0.3); // Slightly transparent
-      margin-top: 0.75rem;
-      margin-bottom: 0.75rem;
-    }
-  }
-
-  .stock-info {
-    display: flex;          // Use flexbox for the row
-    flex-wrap: wrap;        // Allow items to wrap to the next row
-    .info-item {
-      width: 50%;           // Default width for two columns
-      margin-bottom: 0.5rem;
-      box-sizing: border-box; // Include padding in width
-      padding-right: 0.25rem;  // Add some spacing between items (right)
-      padding-left: 0.25rem;   // Add some spacing between items (left)
-    }
-
-    .info-box {
-      background-color: rgba(255, 255, 255, 0.05);
-      border-radius: 0.75rem;
-      padding: 0.75rem;
-      transition: background-color 0.3s ease;
-      height: 100%;         // Ensure all boxes have the same height
-
-      .info-label {
-        color: #a1a1aa;
-        font-size: 0.75rem;
-        margin-bottom: 0.25rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+      .sb-empty-icon {
+        font-size: 1.6rem;
+        display: block;
+        margin-bottom: 0.5rem;
       }
 
-      .info-value {
+      p {
         font-size: 0.9rem;
         font-weight: 500;
-        color: #fff;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        color: var(--text-secondary);
+        margin-bottom: 0.25rem;
       }
 
-      &:hover {
-        background-color: rgba(255, 255, 255, 0.1);
+      small {
+        font-size: 0.75rem;
+        color: var(--text-muted);
       }
     }
   }
 
-  // Responsive adjustments
-  @media (max-width: 576px) {
-    .stock-title {
-      .stock-name {
-        font-size: 1.125rem;
-      }
-      .stock-company-name {
-        font-size: 0.75rem;
-      }
+  // Skeleton
+  &--skeleton {
+    min-height: 88px;
+    gap: 2.5rem;
+    align-items: center;
+
+    .sb-skel-left,
+    .sb-skel-center,
+    .sb-skel-right {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
     }
 
-    .stock-price-section {
-      .stock-price {
-        font-size: 1.25rem;
-        .price-change {
-          font-size: 0.75rem;
-        }
+    .sb-skel-right {
+      flex-direction: row;
+      gap: 2rem;
+      margin-left: auto;
+
+      .sb-skel-metric {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
       }
     }
+  }
 
-    .stock-info {
-      .info-item {
-        width: 100%;       // Take full width on small screens
-        padding-right: 0;  // Remove horizontal padding
-        padding-left: 0;
+  // Identity
+  .sb-identity {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex-shrink: 0;
+    min-width: 130px;
+
+    .sb-ticker {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .sb-name {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      line-height: 1.3;
+      max-width: 200px;
+    }
+
+    .sb-exchange {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--success);
+      background: var(--success-dim);
+      padding: 0.13rem 0.5rem;
+      border-radius: 999px;
+      margin-top: 0.15rem;
+      width: fit-content;
+    }
+  }
+
+  // Price
+  .sb-price-block {
+    .sb-price {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 0.3rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .sb-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+
+      &--up   { color: var(--success); }
+      &--down { color: var(--danger); }
+      &--flat { color: var(--warning); }
+
+      .sb-change-abs {
+        font-weight: 400;
+        font-size: 0.78rem;
+        opacity: 0.75;
       }
-      .info-box {
-        padding: 0.5rem;
-        .info-label {
-          font-size: 0.625rem;
-        }
-        .info-value {
-          font-size: 0.875rem;
-        }
+    }
+  }
+
+  // Divider
+  .sb-divider {
+    width: 1px;
+    align-self: stretch;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  // Metrics
+  .sb-metrics {
+    display: flex;
+    gap: 2rem;
+    margin-left: auto;
+    flex-shrink: 0;
+
+    .sb-metric {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+
+      .sb-metric-label {
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--text-muted);
       }
+
+      .sb-metric-value {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+    }
+  }
+
+  // Responsive
+  @media (max-width: 900px) {
+    gap: 1.5rem;
+    .sb-metrics { gap: 1.25rem; }
+  }
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+
+    .sb-price-block .sb-price { font-size: 1.5rem; }
+    .sb-divider { display: none; }
+    .sb-metrics { margin-left: 0; gap: 1.25rem; flex-wrap: wrap; }
+  }
+
+  @media (max-width: 480px) {
+    .sb-identity .sb-name { display: none; }
+    .sb-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      width: 100%;
     }
   }
 }

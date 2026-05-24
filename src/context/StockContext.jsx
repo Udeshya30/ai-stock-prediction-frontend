@@ -1,0 +1,107 @@
+import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
+
+const StockContext = createContext(null);
+
+export const StockProvider = ({ children }) => {
+  const [selectedStock, setSelectedStock] = useState(null);
+  const [stockData, setStockData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const [pipelineRunning, setPipelineRunning] = useState(false);
+  const [pipelineSteps, setPipelineSteps] = useState([]);
+  const [pipelineComplete, setPipelineComplete] = useState(false);
+  const [pipelineError, setPipelineError] = useState(null);
+  const esRef = useRef(null);
+
+  const selectStock = useCallback(async (ticker, name) => {
+    setSelectedStock({ ticker, name });
+    setLoading(true);
+    setError(null);
+    setStockData(null);
+    setPipelineComplete(false);
+    setPipelineSteps([]);
+    setPipelineRunning(false);
+    setPipelineError(null);
+    try {
+      const res = await fetch(
+        `http://localhost:8000/api/stock-live?ticker=${encodeURIComponent(ticker)}`
+      );
+      const data = await res.json();
+      if (data.success) {
+        setStockData(data.data);
+      } else {
+        setError(data.error || 'Failed to load stock data');
+      }
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const runPipeline = useCallback((ticker) => {
+    if (esRef.current) esRef.current.close();
+    setPipelineRunning(true);
+    setPipelineSteps([]);
+    setPipelineComplete(false);
+    setPipelineError(null);
+
+    const es = new EventSource(
+      `http://localhost:8000/api/run-pipeline-stream?ticker=${encodeURIComponent(ticker)}`
+    );
+    esRef.current = es;
+
+    es.onmessage = (e) => {
+      try {
+        const msg = JSON.parse(e.data);
+
+        if (msg.type === 'progress') {
+          setPipelineSteps(prev => [
+            ...prev,
+            { key: msg.step, label: msg.label, status: 'running', index: msg.index, total: msg.total },
+          ]);
+        } else if (msg.type === 'step_done') {
+          setPipelineSteps(prev =>
+            prev.map(s => s.key === msg.step ? { ...s, status: msg.status, error: msg.error || null } : s)
+          );
+        } else if (msg.type === 'complete') {
+          setStockData(prev => prev ? {
+            ...prev,
+            short_term: msg.predictions.short_term,
+            long_term: msg.predictions.long_term,
+            pattern: msg.predictions.pattern,
+            sector_analysis: msg.predictions.sector_analysis,
+          } : prev);
+          setPipelineComplete(true);
+          setPipelineRunning(false);
+          es.close();
+        } else if (msg.type === 'error') {
+          setPipelineError(msg.message);
+          setPipelineRunning(false);
+          es.close();
+        }
+      } catch {
+        // ignore parse errors
+      }
+    };
+
+    es.onerror = () => {
+      setPipelineRunning(false);
+      setPipelineError('Connection error. Check if the server is running.');
+      es.close();
+    };
+  }, []);
+
+  return (
+    <StockContext.Provider value={{
+      selectedStock, stockData, loading, error, selectStock,
+      pipelineRunning, pipelineSteps, pipelineComplete, pipelineError, runPipeline,
+    }}>
+      {children}
+    </StockContext.Provider>
+  );
+};
+
+export const useStock = () => useContext(StockContext);
+

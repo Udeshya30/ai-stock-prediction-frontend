@@ -1,71 +1,100 @@
-// Header.jsx
-import React, { useState, useEffect } from 'react';
-import { Search } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Search, Zap, Clock } from 'lucide-react';
 import dayjs from 'dayjs';
-import 'dayjs/locale/en';
 import './Header.scss';
+import { useStock } from '../context/StockContext';
 
 const Header = () => {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
+  const [focused, setFocused] = useState(false);
+  const [time, setTime] = useState(dayjs().format('HH:mm'));
+  const { selectStock, loading, selectedStock } = useStock();
+  const dropdownRef = useRef(null);
 
-  const currentTime = dayjs().locale('en').format('ddd, MMM D • HH:mm');
-
-  // Debounced fetch suggestions
   useEffect(() => {
-    const delayDebounce = setTimeout(() => {
+    const t = setInterval(() => setTime(dayjs().format('HH:mm')), 30000);
+    return () => clearInterval(t);
+  }, []);
+
+  useEffect(() => {
+    const delay = setTimeout(() => {
       if (query.trim()) {
         fetch(`http://localhost:8000/api/stocks/search?query=${encodeURIComponent(query)}`)
-          .then(async (res) => {
-            if (!res.ok) throw new Error(`Server error: ${res.status}`);
-            const data = await res.json();
-            setSuggestions(data);
-          })
-          .catch((err) => {
-            console.error("Failed to fetch suggestions", err.message);
-            setSuggestions([]); // fallback to empty list
-          });
+          .then(r => r.ok ? r.json() : [])
+          .then(setSuggestions)
+          .catch(() => setSuggestions([]));
       } else {
         setSuggestions([]);
       }
-    }, 300); // wait 300ms after typing
-
-    return () => clearTimeout(delayDebounce);
+    }, 300);
+    return () => clearTimeout(delay);
   }, [query]);
 
+  useEffect(() => {
+    const handler = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setSuggestions([]);
+        setFocused(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const handleSelect = (item) => {
+    setQuery('');
+    setSuggestions([]);
+    setFocused(false);
+    selectStock(item.ticker, item.name);
+  };
+
   return (
-    <div className="header-bar d-flex justify-content-between align-items-center border-bottom pb-2">
-      <h4>AI Stock Whisper</h4>
-      <div className="d-flex align-items-center position-relative">
-        <div className="input-group me-3">
-          <label htmlFor="search-input" className="visually-hidden">Search stocks...</label>
-          <span className="input-group-text bg-dark border-dark">
-            <Search className="text-white" size={16} />
-          </span>
-          <input
-            type="text"
-            id="search-input"
-            className="form-control bg-dark border-dark text-white"
-            placeholder="Search stocks..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
+    <header className="app-header">
+      <div className="header-inner">
+        <div className="header-brand">
+          <Zap className="brand-icon" size={18} />
+          <span className="brand-name">StockWhisper<span className="brand-accent">AI</span></span>
         </div>
 
-        {/* 🔽 Suggestions Dropdown */}
-        {suggestions.length > 0 && (
-          <ul className="suggestions-dropdown list-group position-absolute bg-dark text-white w-100" style={{ top: '100%', left: 0, zIndex: 1000 }}>
-            {suggestions.map((item) => (
-              <li key={item.ticker} className="list-group-item bg-dark text-white border-secondary">
-                {item.name} ({item.ticker})
-              </li>
-            ))}
-          </ul>
-        )}
+        <div className={`header-search ${focused ? 'is-focused' : ''}`} ref={dropdownRef}>
+          <Search className="search-icon" size={15} />
+          <input
+            type="text"
+            placeholder="Search stocks or companies…"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            onFocus={() => setFocused(true)}
+            aria-label="Search stocks"
+          />
+          {loading && <span className="search-spinner" aria-hidden="true" />}
 
-        <span className="current-time text-secondary ms-2">{currentTime}</span>
+          {suggestions.length > 0 && (
+            <ul className="suggestions-list" role="listbox">
+              {suggestions.map(item => (
+                <li key={item.ticker} onClick={() => handleSelect(item)} role="option">
+                  <span className="sug-ticker">{item.ticker.replace('.NS', '')}</span>
+                  <span className="sug-name">{item.name}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div className="header-right">
+          {selectedStock && (
+            <span className="active-chip">
+              <span className="chip-pulse" />
+              {selectedStock.ticker.replace('.NS', '')}
+            </span>
+          )}
+          <div className="header-time">
+            <Clock size={12} />
+            <span>{time}</span>
+          </div>
+        </div>
       </div>
-    </div>
+    </header>
   );
 };
 

@@ -1,13 +1,63 @@
-// .pattern-alert {
-//     display: flex;
-//     .icon-circle {
-//       width: 42px;
-//       height: 42px;
-//       background-color: rgba(34, 197, 94, 0.1);
-//       display: flex;
-//       justify-content: center;
-//       align-items: center;
-//       border-radius: 50%;
+// PatternDetection.scss
+.pattern-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.035;
+    pointer-events: none;
+  }
+
+  &.pattern-bullish {
+    border-left: 3px solid var(--success);
+    .pattern-name { color: var(--success); }
+    &::after { background: var(--success); }
+  }
+  &.pattern-bearish {
+    border-left: 3px solid var(--danger);
+    .pattern-name { color: var(--danger); }
+    &::after { background: var(--danger); }
+  }
+  &.pattern-neutral {
+    border-left: 3px solid var(--warning);
+    .pattern-name { color: var(--warning); }
+    &::after { background: var(--warning); }
+  }
+
+  .pattern-icon {
+    font-size: 1.35rem;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .pattern-body {
+    min-width: 0;
+
+    .pattern-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      line-height: 1.2;
+    }
+
+    .pattern-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+  }
+}
 //     }
   
 //     h6 {

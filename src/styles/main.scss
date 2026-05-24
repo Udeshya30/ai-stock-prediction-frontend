@@ -1,41 +1,186 @@
 @import 'bootstrap';
 
+// ── Design Tokens ─────────────────────────────────────────────────────────────
+:root {
+  --bg-root:       #060B18;
+  --bg-surface:    #0F1629;
+  --bg-raised:     #141D35;
+  --bg-hover:      rgba(255,255,255,0.05);
+  --border:        rgba(255,255,255,0.07);
+  --border-active: rgba(79,142,247,0.45);
+
+  --accent:        #4F8EF7;
+  --accent-dim:    rgba(79,142,247,0.14);
+  --purple:        #7C3AED;
+  --purple-dim:    rgba(124,58,237,0.14);
+
+  --success:       #10D97C;
+  --success-dim:   rgba(16,217,124,0.12);
+  --danger:        #FF4B63;
+  --danger-dim:    rgba(255,75,99,0.12);
+  --warning:       #FFA726;
+  --warning-dim:   rgba(255,167,38,0.12);
+
+  --text-primary:   #EEF0F4;
+  --text-secondary: #8892A4;
+  --text-muted:     #3E4D63;
+
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-xl:  20px;
+
+  --shadow-sm:  0 2px 8px rgba(0,0,0,0.35);
+  --shadow-md:  0 4px 24px rgba(0,0,0,0.45);
+  --shadow-lg:  0 8px 48px rgba(0,0,0,0.55);
+
+  --gap: 1rem;
+}
+
+// ── Reset ─────────────────────────────────────────────────────────────────────
+* { box-sizing: border-box; }
+
 body {
-  background-color: #0D1117;
-  font-family: 'Inter', sans-serif;
-  color: #ffffff;
+  background-color: var(--bg-root);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
+// ── Scrollbar ─────────────────────────────────────────────────────────────────
+::-webkit-scrollbar         { width: 5px; height: 5px; }
+::-webkit-scrollbar-track   { background: transparent; }
+::-webkit-scrollbar-thumb   { background: rgba(255,255,255,0.1); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+
+// ── Base Card ─────────────────────────────────────────────────────────────────
 .card-dark {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 1.5rem;
-  color: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-  margin-bottom: 1rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
 }
 
-.text-muted {
-  color: #a0a0a0 !important;
+// ── Utility ───────────────────────────────────────────────────────────────────
+.text-success { color: var(--success) !important; }
+.text-danger  { color: var(--danger)  !important; }
+.text-warning { color: var(--warning) !important; }
+.text-muted   { color: var(--text-secondary) !important; }
+.text-accent  { color: var(--accent) !important; }
+
+.section-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.875rem;
+  display: block;
 }
 
-.badge-pill {
-  border-radius: 12px;
-  padding: 0.25rem 0.6rem;
-  font-size: 0.75rem;
+// ── Sentiment Badges ──────────────────────────────────────────────────────────
+.sentiment-tag {
+  font-size: 0.68rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-weight: 700;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  letter-spacing: 0.02em;
+
+  &.positive { background: var(--success-dim); color: var(--success); }
+  &.neutral  { background: rgba(255,255,255,0.07); color: var(--text-secondary); }
+  &.negative { background: var(--danger-dim); color: var(--danger); }
 }
 
-.badge-positive {
-  background-color: #14532d;
-  color: #22c55e;
+// ── App Shell ─────────────────────────────────────────────────────────────────
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.badge-neutral {
-  background-color: #3f3f46;
-  color: #facc15;
+.main-content {
+  flex: 1;
+  padding: 1rem 1.5rem 2.5rem;
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 0.875rem 0.875rem 2rem;
+  }
 }
 
-.badge-negative {
-  background-color: #4c1d1d;
-  color: #ef4444;
+// ── Grid System ───────────────────────────────────────────────────────────────
+.analysis-grid {
+  display: grid;
+  grid-template-columns: 40% 1fr;
+  gap: var(--gap);
+  margin-bottom: var(--gap);
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.analysis-left,
+.analysis-right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.targets-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.news-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Shimmer skeleton ──────────────────────────────────────────────────────────
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.09) 50%,
+    rgba(255,255,255,0.04) 75%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+// ── Keyframes ─────────────────────────────────────────────────────────────────
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.75); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }

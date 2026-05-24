@@ -1,8 +1,106 @@
-// // src/components/TargetCard.scss
-// .card-dark {
-//     h6 {
-//       font-size: 1rem;
-//       color: #fff;
+// TargetCard.scss
+.target-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+
+  // Colored top border per direction
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--text-muted);
+  }
+  &.target-up::before   { background: var(--success); }
+  &.target-down::before { background: var(--danger); }
+  &.target-flat::before { background: var(--warning); }
+
+  &.target-empty {
+    justify-content: flex-start;
+
+    .tc-empty-msg {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+  }
+
+  .tc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .tc-days {
+      font-size: 0.68rem;
+      font-weight: 700;
+      background: var(--bg-raised);
+      color: var(--text-secondary);
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      letter-spacing: 0.04em;
+    }
+  }
+
+  .tc-direction {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    .tc-dir-icon { flex-shrink: 0; }
+    .tc-dir-label {
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+  }
+
+  &.target-up .tc-direction   { color: var(--success); }
+  &.target-down .tc-direction { color: var(--danger); }
+  &.target-flat .tc-direction { color: var(--warning); }
+
+  .tc-range {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tc-conf {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+
+    .tc-conf-track {
+      height: 4px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 999px;
+      overflow: hidden;
+
+      .tc-conf-fill {
+        height: 100%;
+        border-radius: 999px;
+        background: var(--accent);
+        transition: width 0.6s ease;
+      }
+    }
+
+    .tc-conf-text {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+  }
+
+  &.target-up   .tc-conf-fill { background: var(--success); }
+  &.target-down .tc-conf-fill { background: var(--danger); }
+}
 //     }
   
 //     p {

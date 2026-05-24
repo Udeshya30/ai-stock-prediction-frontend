@@ -1,4 +1,77 @@
-// .macro-panel {
+// MacroPanel.scss
+.macro-panel {
+  margin-bottom: var(--gap);
+
+  .macro-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 400px) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .macro-box {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.875rem 1rem;
+    transition: border-color 0.2s, transform 0.15s;
+    cursor: default;
+
+    &:hover {
+      border-color: rgba(255,255,255,0.14);
+      transform: translateY(-1px);
+    }
+
+    &--skeleton {
+      pointer-events: none;
+    }
+
+    .macro-top {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.4rem;
+
+      .macro-icon {
+        font-size: 0.875rem;
+        line-height: 1;
+      }
+
+      .macro-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--text-muted);
+      }
+    }
+
+    .macro-value {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      margin-bottom: 0.25rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .macro-score {
+      font-size: 0.75rem;
+      font-weight: 700;
+
+      &.score-positive { color: var(--success); }
+      &.score-negative { color: var(--danger); }
+      &.score-neutral  { color: var(--text-secondary); }
+    }
+  }
+}
 //   .macro-box {
 //     background-color: rgba(255, 255, 255, 0.05); 
 //     border-radius: 10px;
