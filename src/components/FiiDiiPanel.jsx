@@ -1,6 +1,7 @@
 // FiiDiiPanel.jsx – Institutional flow tracker (FII / DII)
 import React, { useEffect, useState } from 'react';
 import './FiiDiiPanel.scss';
+import { apiUrl } from '../config/api';
 
 const FiiDiiPanel = () => {
   const [data, setData]       = useState(null);
@@ -10,7 +11,7 @@ const FiiDiiPanel = () => {
   const load = () => {
     setLoading(true);
     setError(null);
-    fetch('http://127.0.0.1:8000/api/fii-dii')
+    fetch(apiUrl('/api/fii-dii'))
       .then(r => r.json())
       .then(res => {
         if (res.success && res.data) setData(res.data);

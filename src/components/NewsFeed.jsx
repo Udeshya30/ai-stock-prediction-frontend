@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './NewsFeed.scss';
+import { apiUrl } from '../config/api';
 
 const NewsFeed = ({ title }) => {
   const [newsList, setNewsList] = useState([]);
@@ -26,7 +27,7 @@ const NewsFeed = ({ title }) => {
   };
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/global-news")
+    fetch(apiUrl('/api/global-news'))
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {

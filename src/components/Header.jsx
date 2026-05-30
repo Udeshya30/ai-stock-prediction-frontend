@@ -3,6 +3,7 @@ import { Search, Zap, Clock } from 'lucide-react';
 import dayjs from 'dayjs';
 import './Header.scss';
 import { useStock } from '../context/StockContext';
+import { apiUrl } from '../config/api';
 
 const Header = () => {
   const [query, setQuery] = useState('');
@@ -20,7 +21,7 @@ const Header = () => {
   useEffect(() => {
     const delay = setTimeout(() => {
       if (query.trim()) {
-        fetch(`http://localhost:8000/api/stocks/search?query=${encodeURIComponent(query)}`)
+        fetch(apiUrl(`/api/stocks/search?query=${encodeURIComponent(query)}`))
           .then(r => r.ok ? r.json() : [])
           .then(setSuggestions)
           .catch(() => setSuggestions([]));

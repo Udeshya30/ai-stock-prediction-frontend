@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./MacroPanel.scss";
+import { apiUrl } from "../config/api";
 
 const MacroPanel = () => {
   const [metrics, setMetrics] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/macro-trends")
+    fetch(apiUrl("/api/macro-trends"))
       .then(r => r.json())
       .then(data => {
         if (!data.success) return;

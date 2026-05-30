@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
+import { apiUrl } from '../config/api';
 
 const StockContext = createContext(null);
 
@@ -24,9 +25,7 @@ export const StockProvider = ({ children }) => {
     setPipelineRunning(false);
     setPipelineError(null);
     try {
-      const res = await fetch(
-        `http://localhost:8000/api/stock-live?ticker=${encodeURIComponent(ticker)}`
-      );
+      const res = await fetch(apiUrl(`/api/stock-live?ticker=${encodeURIComponent(ticker)}`));
       const data = await res.json();
       if (data.success) {
         setStockData(data.data);
@@ -47,9 +46,7 @@ export const StockProvider = ({ children }) => {
     setPipelineComplete(false);
     setPipelineError(null);
 
-    const es = new EventSource(
-      `http://localhost:8000/api/run-pipeline-stream?ticker=${encodeURIComponent(ticker)}`
-    );
+    const es = new EventSource(apiUrl(`/api/run-pipeline-stream?ticker=${encodeURIComponent(ticker)}`));
     esRef.current = es;
 
     es.onmessage = (e) => {

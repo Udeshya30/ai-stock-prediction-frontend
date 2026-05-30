@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./StockNews.scss";
 import { useStock } from "../context/StockContext";
+import { apiUrl } from "../config/api";
 
 const StockNews = () => {
   const { selectedStock } = useStock();
@@ -14,7 +15,7 @@ const StockNews = () => {
     if (!ticker) { setNewsList([]); return; }
     setLoading(true);
     setError(null);
-    fetch(`http://127.0.0.1:8000/api/news-sentiment?ticker=${encodeURIComponent(ticker)}`)
+    fetch(apiUrl(`/api/news-sentiment?ticker=${encodeURIComponent(ticker)}`))
       .then(res => res.json())
       .then(data => {
         if (data.success) {
