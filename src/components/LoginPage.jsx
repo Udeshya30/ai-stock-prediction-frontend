@@ -10,7 +10,7 @@ const LoginPage = ({ onLogin, envConfigured }) => {
     e.preventDefault();
 
     if (!envConfigured) {
-      setError('Login is not configured. Set VITE_LOGIN_USERNAME and VITE_LOGIN_PASSWORD in env.');
+      setError('Login is not configured');
       return;
     }
 
