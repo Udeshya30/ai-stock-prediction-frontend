@@ -2,6 +2,7 @@
 import React from 'react';
 import './PatternDetection.scss';
 import { useStock } from '../context/StockContext';
+import { BiTrendingUp, BiTrendingDown, BiLineChart } from 'react-icons/bi';
 
 const PatternDetection = () => {
   const { stockData, selectedStock } = useStock();
@@ -14,11 +15,11 @@ const PatternDetection = () => {
   const isBullish = name?.toLowerCase().includes('bullish');
   const isBearish = name?.toLowerCase().includes('bearish');
   const typeClass = isBullish ? 'bullish' : isBearish ? 'bearish' : 'neutral';
-  const icon = isBullish ? '📈' : isBearish ? '📉' : '🕯️';
+  const Icon = isBullish ? BiTrendingUp : isBearish ? BiTrendingDown : BiLineChart;
 
   return (
     <div className={`pattern-card pattern-${typeClass}`}>
-      <span className="pattern-icon">{icon}</span>
+      <span className="pattern-icon"><Icon /></span>
       <div className="pattern-body">
         <span className="section-label">Pattern Detected</span>
         <div className="pattern-name">{name || 'No Pattern Detected'}</div>

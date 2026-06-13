@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./MacroPanel.scss";
 import { apiUrl } from "../config/api";
+import { MdCurrencyExchange } from "react-icons/md";
+import { FaUniversity, FaOilCan } from "react-icons/fa";
+import { GiGoldBar } from "react-icons/gi";
 
 const MacroPanel = () => {
   const [metrics, setMetrics] = useState([]);
@@ -18,28 +21,28 @@ const MacroPanel = () => {
             value: d["USD/INR"]?.price || "—",
             score: d["USD/INR"]?.score,
             sentiment: d["USD/INR"]?.sentiment || "",
-            icon: "💵",
+            Icon: MdCurrencyExchange,
           },
           {
             label: "Repo Rate",
             value: d["RBI Repo Rate"]?.price || d["RBI Repo Rate"]?.rate || "6.50%",
             score: 0,
             sentiment: d["RBI Repo Rate"]?.sentiment || "",
-            icon: "🏦",
+            Icon: FaUniversity,
           },
           {
             label: "Gold",
             value: d["Gold"]?.price || "—",
             score: d["Gold"]?.score,
             sentiment: d["Gold"]?.sentiment || "",
-            icon: "🥇",
+            Icon: GiGoldBar,
           },
           {
             label: "Brent Crude",
             value: d["Brent Crude"]?.price || "—",
             score: d["Brent Crude"]?.score,
             sentiment: d["Brent Crude"]?.sentiment || "",
-            icon: "🛢️",
+            Icon: FaOilCan,
           },
         ]);
       })
@@ -63,6 +66,9 @@ const MacroPanel = () => {
   if (loading) {
     return (
       <div className="macro-panel">
+        <div className="macro-head">
+          <span className="section-label">Macro & Global</span>
+        </div>
         <div className="macro-grid">
           {[1, 2, 3, 4].map(i => (
             <div key={i} className="macro-box macro-box--skeleton">
@@ -78,13 +84,17 @@ const MacroPanel = () => {
 
   return (
     <div className="macro-panel">
+      <div className="macro-head">
+        <span className="section-label">Macro & Global</span>
+      </div>
       <div className="macro-grid">
         {metrics.map(m => {
           const cls = scoreClass(m.score);
+          const Icon = m.Icon;
           return (
             <div key={m.label} className="macro-box">
               <div className="macro-top">
-                <span className="macro-icon">{m.icon}</span>
+                <span className="macro-icon"><Icon /></span>
                 <span className="macro-label">{m.label}</span>
               </div>
               <div className="macro-value">{m.value}</div>

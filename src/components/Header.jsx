@@ -5,9 +5,10 @@ import './Header.scss';
 import { useStock } from '../context/StockContext';
 import { apiUrl } from '../config/api';
 
-const Header = () => {
+const Header = ({ onLogout }) => {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
+  const [selectedSuggestion, setSelectedSuggestion] = useState(null);
   const [focused, setFocused] = useState(false);
   const [time, setTime] = useState(dayjs().format('HH:mm'));
   const { selectStock, loading, selectedStock } = useStock();
@@ -24,10 +25,18 @@ const Header = () => {
       return ticker === normalized || name === normalized;
     });
 
+    const selected = selectedSuggestion && (
+      selectedSuggestion.ticker.toUpperCase() === normalized ||
+      selectedSuggestion.name.toUpperCase() === normalized
+    ) ? selectedSuggestion : null;
+
+    const finalSelection = selected || exactSuggestion;
+
     setQuery('');
     setSuggestions([]);
+    setSelectedSuggestion(null);
     setFocused(false);
-    selectStock(exactSuggestion?.ticker || normalized, exactSuggestion?.name || raw);
+    selectStock(finalSelection?.ticker || normalized, finalSelection?.name || raw);
   };
 
   useEffect(() => {
@@ -61,10 +70,10 @@ const Header = () => {
   }, []);
 
   const handleSelect = (item) => {
-    setQuery('');
+    setQuery(item.ticker.replace('.NS', ''));
+    setSelectedSuggestion(item);
     setSuggestions([]);
-    setFocused(false);
-    selectStock(item.ticker, item.name);
+    setFocused(true);
   };
 
   const handleSearch = () => selectTypedStock(query);
@@ -72,7 +81,6 @@ const Header = () => {
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      handleSearch();
     }
   };
 
@@ -84,18 +92,23 @@ const Header = () => {
           <span className="brand-name">StockWhisper<span className="brand-accent">AI</span></span>
         </div>
 
-        <div className={`header-search ${focused ? 'is-focused' : ''}`} ref={dropdownRef}>
-          <Search className="search-icon" size={15} />
-          <input
-            type="text"
-            placeholder="Search stocks or type ticker…"
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            onFocus={() => setFocused(true)}
-            onKeyDown={handleKeyDown}
-            aria-label="Search stocks"
-          />
-          {loading && <span className="search-spinner" aria-hidden="true" />}
+        <div className="header-search-wrap" ref={dropdownRef}>
+          <div className={`header-search ${focused ? 'is-focused' : ''}`}>
+            <Search className="search-icon" size={15} />
+            <input
+              type="text"
+              placeholder="Search stocks or type ticker…"
+              value={query}
+              onChange={e => {
+                setQuery(e.target.value);
+                setSelectedSuggestion(null);
+              }}
+              onFocus={() => setFocused(true)}
+              onKeyDown={handleKeyDown}
+              aria-label="Search stocks"
+            />
+            {loading && <span className="search-spinner" aria-hidden="true" />}
+          </div>
 
           <button type="button" className="search-action" onClick={handleSearch} aria-label="Search selected ticker">
             Search
@@ -124,6 +137,9 @@ const Header = () => {
             <Clock size={12} />
             <span>{time}</span>
           </div>
+          <button type="button" className="logout-btn" onClick={onLogout}>
+            Logout
+          </button>
         </div>
       </div>
     </header>

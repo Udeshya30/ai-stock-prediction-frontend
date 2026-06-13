@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import './FiiDiiPanel.scss';
 import { apiUrl } from '../config/api';
+import { FaGlobeAmericas, FaHome, FaBroadcastTower } from 'react-icons/fa';
+import { MdDateRange } from 'react-icons/md';
 
 const FiiDiiPanel = () => {
   const [data, setData]       = useState(null);
@@ -74,7 +76,7 @@ const FiiDiiPanel = () => {
           <span className="fd-tag fd-tag--na">Unavailable</span>
         </div>
         <div className="fd-unavailable">
-          <span className="fd-unavail-icon">📡</span>
+          <span className="fd-unavail-icon"><FaBroadcastTower /></span>
           <div>
             <div className="fd-unavail-title">FII / DII data could not be loaded</div>
             <div className="fd-unavail-sub">{error || 'NSE may be closed or data service unavailable.'}</div>
@@ -90,22 +92,28 @@ const FiiDiiPanel = () => {
   const sentiment = overall(fii, dii);
 
   const cards = [
-    { key: 'fii', icon: '🌍', label: 'FII', sub: 'Foreign Institutional', net: fii, sentiment: data.fii_sentiment },
-    { key: 'dii', icon: '🏠', label: 'DII', sub: 'Domestic Institutional', net: dii, sentiment: data.dii_sentiment },
+    { key: 'fii', Icon: FaGlobeAmericas, label: 'FII', sub: 'Foreign Institutional', net: fii, sentiment: data.fii_sentiment },
+    { key: 'dii', Icon: FaHome, label: 'DII', sub: 'Domestic Institutional', net: dii, sentiment: data.dii_sentiment },
   ];
 
   return (
     <div className="fiidii-panel">
       <div className="fd-header">
         <span className="section-label">Institutional Flow</span>
-        {data.date && <span className="fd-date">📅 {data.date}</span>}
+        {data.date && (
+          <span className="fd-date">
+            <MdDateRange /> {data.date}
+          </span>
+        )}
       </div>
 
       <div className="fd-grid">
-        {cards.map(c => (
+        {cards.map(c => {
+          const Icon = c.Icon;
+          return (
           <div key={c.key} className={`fd-card fd-card--${dir(c.net)}`}>
             <div className="fd-card-top">
-              <span className="fd-icon">{c.icon}</span>
+              <span className="fd-icon"><Icon /></span>
               <div>
                 <div className="fd-label">{c.label}</div>
                 <div className="fd-sub">{c.sub}</div>
@@ -118,7 +126,7 @@ const FiiDiiPanel = () => {
               {dir(c.net) === 'buy' ? '▲ Buying' : dir(c.net) === 'sell' ? '▼ Selling' : '— Neutral'}
             </div>
           </div>
-        ))}
+        )})}
       </div>
 
       <div className={`fd-interpretation fd-interpretation--${sentiment.cls}`}>

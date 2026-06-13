@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './LoginPage.scss';
 
-const LoginPage = ({ onLogin, envConfigured }) => {
+const LoginPage = ({ onLogin, envConfigured, onBackHome }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -27,7 +27,7 @@ const LoginPage = ({ onLogin, envConfigured }) => {
     <div className="login-page">
       <div className="login-card">
         <h1>StockWhisperAI</h1>
-        <p>Sign in to continue to the dashboard</p>
+        <p>Invite-only access. Sign in to continue to the dashboard.</p>
 
         <form onSubmit={handleSubmit}>
           <label htmlFor="login-username">Username</label>
@@ -53,6 +53,12 @@ const LoginPage = ({ onLogin, envConfigured }) => {
           {error && <div className="login-error">{error}</div>}
 
           <button type="submit">Login</button>
+
+          {onBackHome && (
+            <button type="button" className="secondary" onClick={onBackHome}>
+              Back to Home
+            </button>
+          )}
         </form>
       </div>
     </div>

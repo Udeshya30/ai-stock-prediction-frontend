@@ -13,8 +13,12 @@ import NewsFeed from "./components/NewsFeed";
 import StockNews from "./components/StockNews";
 import PipelineRunner from "./components/PipelineRunner";
 import LoginPage from "./components/LoginPage";
+import HomePage from "./components/HomePage";
 
 const LOGIN_SESSION_KEY = "stockwhisper_auth";
+const VIEW_HOME = "home";
+const VIEW_LOGIN = "login";
+const VIEW_DASHBOARD = "dashboard";
 
 const App = () => {
   const { selectedStock } = useStock();
@@ -29,48 +33,76 @@ const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return sessionStorage.getItem(LOGIN_SESSION_KEY) === "1";
   });
+  const [view, setView] = useState(() => (
+    sessionStorage.getItem(LOGIN_SESSION_KEY) === "1" ? VIEW_DASHBOARD : VIEW_HOME
+  ));
 
   const handleLogin = (username, password) => {
     const ok = username === envUsername && password === envPassword;
     if (ok) {
       sessionStorage.setItem(LOGIN_SESSION_KEY, "1");
       setIsAuthenticated(true);
+      setView(VIEW_DASHBOARD);
       return true;
     }
     return false;
   };
 
+  const handleLogout = () => {
+    sessionStorage.removeItem(LOGIN_SESSION_KEY);
+    setIsAuthenticated(false);
+    setView(VIEW_HOME);
+  };
+
+  const openLogin = () => setView(VIEW_LOGIN);
+
+  const backToHome = () => setView(VIEW_HOME);
+
+  if (!isAuthenticated && view === VIEW_HOME) {
+    return <HomePage onLoginClick={openLogin} />;
+  }
+
   if (!isAuthenticated) {
-    return <LoginPage onLogin={handleLogin} envConfigured={envConfigured} />;
+    return (
+      <LoginPage
+        onLogin={handleLogin}
+        envConfigured={envConfigured}
+        onBackHome={backToHome}
+      />
+    );
   }
 
   return (
     <div className="app-layout">
-      <Header />
+      <Header onLogout={handleLogout} />
       <main className="main-content">
 
-        {/* ── Always visible: Market overview ── */}
-        <MacroPanel />
-        <FiiDiiPanel />
-
-        {/* ── Stock selected: AI analysis ── */}
-        {selectedStock && (
+        {selectedStock ? (
           <>
-            <StockCard />
-            <PipelineRunner />
-            <div className="analysis-grid">
-              <div className="analysis-left">
+            <div className="dashboard-grid">
+              <div className="dashboard-left">
+                <StockCard />
                 <SectorChart />
                 <div className="targets-row">
                   <TargetCard type="short" />
                   <TargetCard type="long" />
                 </div>
               </div>
-              <div className="analysis-right">
+
+              <div className="dashboard-right">
+                <MacroPanel />
                 <PatternDetection />
                 <StockNews />
               </div>
             </div>
+            <PipelineRunner />
+            <FiiDiiPanel />
+          </>
+        ) : (
+          <>
+            <MacroPanel />
+            <FiiDiiPanel />
+            <StockCard />
           </>
         )}
 

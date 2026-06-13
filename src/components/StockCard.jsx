@@ -3,6 +3,7 @@ import React from 'react';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import './StockCard.scss';
 import { useStock } from '../context/StockContext';
+import { AiOutlineRise } from "react-icons/ai";
 
 const Skeleton = ({ w, h = 14 }) => (
   <span className="shimmer" style={{ display: 'block', width: w, height: h, borderRadius: 6 }} />
@@ -15,7 +16,7 @@ const StockCard = () => {
     return (
       <div className="stock-banner stock-banner--empty">
         <div className="sb-empty">
-          <span className="sb-empty-icon">📊</span>
+          <span className="sb-empty-icon"><AiOutlineRise /></span>
           <p>Search and select a stock to begin</p>
           <small>Live prices · AI predictions · Sentiment analysis</small>
         </div>

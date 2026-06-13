@@ -2,7 +2,7 @@ import React from 'react';
 import { useStock } from '../context/StockContext';
 import './PipelineRunner.scss';
 
-const STEP_ICONS = { running: '⏳', done: '✅', error: '❌', pending: '○' };
+const STEP_ICONS = { running: '🟡', done: '🟢', error: '🔴', pending: '○' };
 
 const PipelineRunner = () => {
   const {
@@ -80,7 +80,7 @@ const PipelineRunner = () => {
       {/* Complete */}
       {pipelineComplete && (
         <div className="pr-complete">
-          <span className="pr-complete-icon">✅</span>
+          <span className="pr-complete-icon">🟢</span>
           <span>
             Analysis complete for <strong>{stockData.base_ticker}</strong> — predictions loaded
           </span>
@@ -90,7 +90,7 @@ const PipelineRunner = () => {
       {/* Error */}
       {pipelineError && (
         <div className="pr-error">
-          <div className="pr-error-msg">❌ {pipelineError}</div>
+          <div className="pr-error-msg">🔴 {pipelineError}</div>
           <button className="pr-btn pr-btn--outline" onClick={() => runPipeline(selectedStock.ticker)}>
             Retry
           </button>

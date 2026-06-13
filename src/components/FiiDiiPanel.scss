@@ -4,7 +4,6 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 1rem 1.25rem;
-  margin-bottom: var(--gap);
 
   .fd-header {
     display: flex;
@@ -13,8 +12,16 @@
     margin-bottom: 0.875rem;
 
     .fd-date {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.28rem;
       font-size: 0.72rem;
       color: var(--text-muted);
+
+      svg {
+        width: 0.85rem;
+        height: 0.85rem;
+      }
     }
 
     .fd-tag {
@@ -43,22 +50,15 @@
   .fd-card {
     background: var(--bg-raised);
     border: 1px solid var(--border);
+    border-left: 2px solid rgba(255,255,255,0.12);
     border-radius: var(--radius-md);
     padding: 0.75rem 0.875rem;
     position: relative;
     overflow: hidden;
 
-    &::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 3px;
-      border-radius: 3px 0 0 3px;
-    }
-
-    &--buy::before  { background: var(--success); }
-    &--sell::before { background: var(--danger); }
-    &--neutral::before { background: var(--text-muted); }
+    &--buy  { border-left-color: var(--success); }
+    &--sell { border-left-color: var(--danger); }
+    &--neutral { border-left-color: rgba(255,255,255,0.12); }
 
     &--skeleton { opacity: 0.6; }
 
@@ -69,6 +69,10 @@
       margin-bottom: 0.5rem;
 
       .fd-icon { font-size: 1.1rem; margin-top: 2px; flex-shrink: 0; }
+      .fd-icon svg {
+        width: 1.02rem;
+        height: 1.02rem;
+      }
       .fd-label { font-size: 0.82rem; font-weight: 700; color: var(--text-primary); }
       .fd-sub   { font-size: 0.68rem; color: var(--text-muted); }
     }
@@ -98,33 +102,39 @@
 
   // ── interpretation bar ──
   .fd-interpretation {
+    position: relative;
+    overflow: hidden;
+    border-left: 2px solid rgba(255,255,255,0.12);
     border-radius: var(--radius-md);
     padding: 0.6rem 0.875rem;
-    border-left: 3px solid;
+
+    &::before {
+      content: none;
+    }
 
     &--very-bullish {
       background: var(--success-dim);
-      border-color: var(--success);
+      border-left-color: var(--success);
       .fd-interp-label { color: var(--success); }
     }
     &--bullish {
       background: rgba(16, 217, 124, 0.07);
-      border-color: rgba(16, 217, 124, 0.5);
+      border-left-color: rgba(16, 217, 124, 0.5);
       .fd-interp-label { color: #4ae89e; }
     }
     &--cautious {
       background: var(--warning-dim);
-      border-color: var(--warning);
+      border-left-color: var(--warning);
       .fd-interp-label { color: var(--warning); }
     }
     &--very-bearish {
       background: var(--danger-dim);
-      border-color: var(--danger);
+      border-left-color: var(--danger);
       .fd-interp-label { color: var(--danger); }
     }
     &--neutral {
       background: rgba(255, 255, 255, 0.04);
-      border-color: var(--border);
+      border-left-color: rgba(255,255,255,0.12);
       .fd-interp-label { color: var(--text-muted); }
     }
 
@@ -151,7 +161,15 @@
     border-radius: var(--radius-md);
     padding: 0.75rem 0.875rem;
 
-    .fd-unavail-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .fd-unavail-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+
+      svg {
+        width: 1.3rem;
+        height: 1.3rem;
+      }
+    }
 
     .fd-unavail-title {
       font-size: 0.82rem;
