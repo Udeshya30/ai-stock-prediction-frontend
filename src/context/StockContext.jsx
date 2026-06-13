@@ -16,7 +16,8 @@ export const StockProvider = ({ children }) => {
   const esRef = useRef(null);
 
   const selectStock = useCallback(async (ticker, name) => {
-    setSelectedStock({ ticker, name });
+    const normalizedTicker = ticker.trim().toUpperCase();
+    setSelectedStock({ ticker: normalizedTicker, name: name || normalizedTicker });
     setLoading(true);
     setError(null);
     setStockData(null);
@@ -25,7 +26,7 @@ export const StockProvider = ({ children }) => {
     setPipelineRunning(false);
     setPipelineError(null);
     try {
-      const res = await fetch(apiUrl(`/api/stock-live?ticker=${encodeURIComponent(ticker)}`));
+      const res = await fetch(apiUrl(`/api/stock-live?ticker=${encodeURIComponent(normalizedTicker)}`));
       const data = await res.json();
       if (data.success) {
         setStockData(data.data);

@@ -13,6 +13,23 @@ const Header = () => {
   const { selectStock, loading, selectedStock } = useStock();
   const dropdownRef = useRef(null);
 
+  const selectTypedStock = (value) => {
+    const raw = value.trim();
+    if (!raw) return;
+
+    const normalized = raw.toUpperCase();
+    const exactSuggestion = suggestions.find(item => {
+      const ticker = item.ticker.toUpperCase();
+      const name = item.name.toUpperCase();
+      return ticker === normalized || name === normalized;
+    });
+
+    setQuery('');
+    setSuggestions([]);
+    setFocused(false);
+    selectStock(exactSuggestion?.ticker || normalized, exactSuggestion?.name || raw);
+  };
+
   useEffect(() => {
     const t = setInterval(() => setTime(dayjs().format('HH:mm')), 30000);
     return () => clearInterval(t);
@@ -50,6 +67,15 @@ const Header = () => {
     selectStock(item.ticker, item.name);
   };
 
+  const handleSearch = () => selectTypedStock(query);
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSearch();
+    }
+  };
+
   return (
     <header className="app-header">
       <div className="header-inner">
@@ -62,13 +88,18 @@ const Header = () => {
           <Search className="search-icon" size={15} />
           <input
             type="text"
-            placeholder="Search stocks or companies…"
+            placeholder="Search stocks or type ticker…"
             value={query}
             onChange={e => setQuery(e.target.value)}
             onFocus={() => setFocused(true)}
+            onKeyDown={handleKeyDown}
             aria-label="Search stocks"
           />
           {loading && <span className="search-spinner" aria-hidden="true" />}
+
+          <button type="button" className="search-action" onClick={handleSearch} aria-label="Search selected ticker">
+            Search
+          </button>
 
           {suggestions.length > 0 && (
             <ul className="suggestions-list" role="listbox">
