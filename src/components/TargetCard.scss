@@ -73,6 +73,31 @@
     font-variant-numeric: tabular-nums;
   }
 
+  .tc-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .tc-pill {
+    font-size: 0.62rem;
+    color: var(--text-secondary);
+    border: 1px solid rgba(255,255,255,0.09);
+    background: rgba(255,255,255,0.03);
+    border-radius: 999px;
+    padding: 0.16rem 0.42rem;
+
+    &.is-fresh {
+      color: var(--success);
+      border-color: rgba(16,217,124,0.24);
+    }
+
+    &.is-stale {
+      color: var(--warning);
+      border-color: rgba(255,167,38,0.24);
+    }
+  }
+
   .tc-conf {
     display: flex;
     flex-direction: column;
@@ -96,6 +121,32 @@
       font-size: 0.64rem;
       color: var(--text-muted);
     }
+  }
+
+  .tc-reco {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    border-radius: 10px;
+    padding: 0.48rem 0.56rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+
+    strong {
+      font-size: 0.72rem;
+      letter-spacing: -0.01em;
+    }
+
+    span {
+      font-size: 0.64rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    &.tc-reco--consider strong { color: var(--success); }
+    &.tc-reco--watch strong { color: var(--warning); }
+    &.tc-reco--wait strong { color: var(--text-secondary); }
+    &.tc-reco--avoid strong { color: var(--danger); }
   }
 
   &.target-up   .tc-conf-fill { background: var(--success); }

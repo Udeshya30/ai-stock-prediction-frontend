@@ -40,6 +40,15 @@ const TargetCard = ({ type }) => {
     : '—';
 
   const confPct = pred.confidence ? Math.round(pred.confidence * 100) : 0;
+  const valAccPct = pred.validation_accuracy != null ? Math.round(pred.validation_accuracy * 100) : null;
+  const reliabilityPct = pred.recommendation?.reliability_score != null
+    ? Math.round(pred.recommendation.reliability_score * 100)
+    : null;
+  const freshnessLabel = pred.freshness_days == null
+    ? 'freshness unknown'
+    : pred.freshness_days === 0
+      ? 'fresh today'
+      : `${pred.freshness_days}d old`;
 
   return (
     <div className={`target-card target-${dirClass}`}>
@@ -55,12 +64,25 @@ const TargetCard = ({ type }) => {
 
       <div className="tc-range">{targetStr}</div>
 
+      <div className="tc-meta-row">
+        <span className={`tc-pill ${pred.is_stale ? 'is-stale' : 'is-fresh'}`}>{freshnessLabel}</span>
+        {valAccPct != null && <span className="tc-pill">Val {valAccPct}%</span>}
+        {reliabilityPct != null && <span className="tc-pill">Reliability {reliabilityPct}%</span>}
+      </div>
+
       {confPct > 0 && (
         <div className="tc-conf">
           <div className="tc-conf-track">
             <div className="tc-conf-fill" style={{ width: `${confPct}%` }} />
           </div>
           <span className="tc-conf-text">{confPct}% confidence</span>
+        </div>
+      )}
+
+      {pred.recommendation?.label && (
+        <div className={`tc-reco tc-reco--${pred.recommendation.action || 'wait'}`}>
+          <strong>{pred.recommendation.label}</strong>
+          {pred.recommendation.reason && <span>{pred.recommendation.reason}</span>}
         </div>
       )}
     </div>

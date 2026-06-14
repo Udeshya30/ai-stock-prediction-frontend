@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { apiUrl } from '../config/api';
 
 const StockContext = createContext(null);
@@ -14,6 +14,7 @@ export const StockProvider = ({ children }) => {
   const [pipelineComplete, setPipelineComplete] = useState(false);
   const [pipelineError, setPipelineError] = useState(null);
   const esRef = useRef(null);
+  const autoTriggeredRef = useRef(null);
 
   const selectStock = useCallback(async (ticker, name) => {
     const normalizedTicker = ticker.trim().toUpperCase();
@@ -90,6 +91,16 @@ export const StockProvider = ({ children }) => {
       es.close();
     };
   }, []);
+
+  useEffect(() => {
+    if (!selectedStock || !stockData || pipelineRunning) return;
+    const normalizedTicker = selectedStock.ticker?.trim().toUpperCase();
+    const shouldAutoRun = !stockData.short_term && !stockData.long_term;
+    if (shouldAutoRun && autoTriggeredRef.current !== normalizedTicker) {
+      autoTriggeredRef.current = normalizedTicker;
+      runPipeline(normalizedTicker);
+    }
+  }, [selectedStock, stockData, pipelineRunning, runPipeline]);
 
   return (
     <StockContext.Provider value={{
