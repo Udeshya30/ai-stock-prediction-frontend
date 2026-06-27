@@ -40,7 +40,7 @@ const FiiDiiPanel = () => {
     if (fii == null || dii == null)
       return { label: 'Unknown', cls: 'neutral', desc: 'Institutional flow data not available.' };
     if (fii > 0 && dii > 0)
-      return { label: 'Strong Accumulation', cls: 'very-bullish', desc: 'Both FII & DII buying — high institutional conviction. Trend likely to continue upward.' };
+      return { label: 'Strong Accumulation', cls: 'very-bullish', desc: 'Both FII & DII buying - high institutional conviction. Trend likely to continue upward.' };
     if (fii > 0 && dii < 0)
       return { label: 'Foreign Buying', cls: 'bullish', desc: 'FII inflows positive; DIIs booking profits. Watch for resistance near recent highs.' };
     if (fii < 0 && dii > 0)

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { FiExternalLink } from "react-icons/fi";
 import "./StockNews.scss";
 import { useStock } from "../context/StockContext";
 import { apiUrl } from "../config/api";
@@ -26,6 +27,7 @@ const StockNews = () => {
               sentiment: item.sentiment > 0.1 ? "positive" : item.sentiment < -0.1 ? "negative" : "neutral",
               sentimentValue: parseFloat(item.sentiment).toFixed(2),
               emoji: item.emoji,
+              link: item.link || "",
             }))
             .sort((a, b) => new Date(b.date) - new Date(a.date));
           setNewsList(items);
@@ -65,7 +67,21 @@ const StockNews = () => {
         ) : (
           newsList.map((news, idx) => (
             <div key={idx} className={`sn-item sn-${news.sentiment}`}>
-              <div className="sn-title">{news.title}</div>
+              <div className="sn-title-row">
+                <div className="sn-title">{news.title}</div>
+                {news.link && (
+                  <a
+                    className="sn-link"
+                    href={news.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Open news article: ${news.title}`}
+                    title="Open news article"
+                  >
+                    <FiExternalLink aria-hidden="true" />
+                  </a>
+                )}
+              </div>
               <div className="sn-footer">
                 <span className="sn-date">{news.date}</span>
                 <span className={`sentiment-tag ${news.sentiment}`}>

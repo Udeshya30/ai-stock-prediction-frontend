@@ -60,11 +60,37 @@
     &.negative { border-left-color: var(--danger); }
     &.neutral  { border-left-color: rgba(255,255,255,0.12); }
 
+    .news-title-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.45rem;
+      margin-bottom: 0.35rem;
+    }
+
     .news-title {
+      flex: 1;
+      min-width: 0;
       font-size: 0.78rem;
       color: var(--text-primary);
       line-height: 1.4;
-      margin-bottom: 0.35rem;
+    }
+
+    .news-link {
+      width: 1.45rem;
+      height: 1.45rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 1.45rem;
+      color: var(--text-muted);
+      border-radius: 6px;
+      text-decoration: none;
+      transition: color 0.15s, background 0.15s;
+
+      &:hover {
+        color: var(--accent);
+        background: rgba(255, 255, 255, 0.07);
+      }
     }
 
     .news-footer {

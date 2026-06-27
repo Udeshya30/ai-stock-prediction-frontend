@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { FiExternalLink } from 'react-icons/fi';
 import './NewsFeed.scss';
 import { apiUrl } from '../config/api';
 
@@ -62,6 +63,7 @@ const NewsFeed = ({ title }) => {
                 sentiment: sentimentLabel,
                 sentimentValue: item.sentiment.toFixed(2),
                 emoji: item.emoji,
+                link: item.link || "",
               };
             }) || [];
 
@@ -98,7 +100,21 @@ const NewsFeed = ({ title }) => {
         ) : (
           newsList.map((news, idx) => (
             <div key={idx} className={`news-item ${news.sentiment}`}>
-              <div className="news-title">{news.title}</div>
+              <div className="news-title-row">
+                <div className="news-title">{news.title}</div>
+                {news.link && (
+                  <a
+                    className="news-link"
+                    href={news.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Open news article: ${news.title}`}
+                    title="Open news article"
+                  >
+                    <FiExternalLink aria-hidden="true" />
+                  </a>
+                )}
+              </div>
               <div className="news-footer">
                 <span className="news-date">{news.date}</span>
                 <span className={`sentiment-tag ${news.sentiment}`}>

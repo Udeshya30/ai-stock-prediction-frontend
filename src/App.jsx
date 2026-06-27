@@ -79,9 +79,16 @@ const App = () => {
 
         {selectedStock ? (
           <>
-            <div className="dashboard-grid">
-              <div className="dashboard-left">
-                <StockCard />
+            <div className="dashboard-top-grid">
+              <StockCard />
+              <div className="dashboard-signal-stack">
+                <MacroPanel />
+                <PatternDetection />
+              </div>
+            </div>
+
+            <div className="dashboard-news-grid">
+              <div className="dashboard-news-left">
                 <SectorChart />
                 <div className="targets-row">
                   <TargetCard type="short" />
@@ -89,12 +96,11 @@ const App = () => {
                 </div>
               </div>
 
-              <div className="dashboard-right">
-                <MacroPanel />
-                <PatternDetection />
+              <div className="dashboard-news-right">
                 <StockNews />
               </div>
             </div>
+
             <PipelineRunner />
             <FiiDiiPanel />
           </>
