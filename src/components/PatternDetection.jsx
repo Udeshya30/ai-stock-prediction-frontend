@@ -16,6 +16,10 @@ const PatternDetection = () => {
   const isBearish = name?.toLowerCase().includes('bearish');
   const typeClass = isBullish ? 'bullish' : isBearish ? 'bearish' : 'neutral';
   const Icon = isBullish ? BiTrendingUp : isBearish ? BiTrendingDown : BiLineChart;
+  const strength = pattern?.strength ?? 0;
+  const action = pattern?.action || 'ignore';
+  const confirmation = (pattern?.confirmation || 'none').replaceAll('_', ' ');
+  const verdict = pattern?.verdict || (action === 'ignore' ? 'Ignore' : 'Watch Closely');
 
   return (
     <div className={`pattern-card pattern-${typeClass}`}>
@@ -23,7 +27,16 @@ const PatternDetection = () => {
       <div className="pattern-body">
         <span className="section-label">Pattern Detected</span>
         <div className="pattern-name">{name || 'No Pattern Detected'}</div>
+        {name && (
+          <div className="pattern-meta">
+            <span className={`pattern-action pattern-action--${action}`}>{verdict}</span>
+            <span>Strength {strength}/100</span>
+            <span>{confirmation}</span>
+          </div>
+        )}
         <div className="pattern-desc">{explanation}</div>
+        {pattern?.verdict_reason && <div className="pattern-verdict-reason">{pattern.verdict_reason}</div>}
+        {pattern?.details && <div className="pattern-details">{pattern.details}</div>}
       </div>
     </div>
   );

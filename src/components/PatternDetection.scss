@@ -59,10 +59,62 @@
       line-height: 1.2;
     }
 
+    .pattern-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 0.35rem;
+
+      span {
+        font-size: 0.62rem;
+        color: var(--text-secondary);
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.03);
+        border-radius: 999px;
+        padding: 0.12rem 0.42rem;
+        text-transform: capitalize;
+      }
+
+      .pattern-action--buy_setup,
+      .pattern-action--confirmed {
+        color: var(--success);
+        border-color: rgba(16,217,124,0.22);
+      }
+
+      .pattern-action--sell_avoid {
+        color: var(--danger);
+        border-color: rgba(255,75,99,0.22);
+      }
+
+      .pattern-action--watch,
+      .pattern-action--watch_closely {
+        color: var(--warning);
+        border-color: rgba(255,167,38,0.22);
+      }
+
+      .pattern-action--ignore {
+        color: var(--text-muted);
+      }
+    }
+
     .pattern-desc {
       font-size: 0.76rem;
       color: var(--text-secondary);
       line-height: 1.45;
+    }
+
+    .pattern-verdict-reason {
+      margin-top: 0.22rem;
+      font-size: 0.68rem;
+      color: var(--text-secondary);
+      line-height: 1.35;
+    }
+
+    .pattern-details {
+      margin-top: 0.25rem;
+      font-size: 0.64rem;
+      color: var(--text-muted);
+      line-height: 1.35;
     }
   }
 }

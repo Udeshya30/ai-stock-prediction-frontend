@@ -82,7 +82,7 @@ const NewsFeed = ({ title }) => {
   }, [title]);
 
   const sentimentLabel = { positive: 'Bullish', neutral: 'Neutral', negative: 'Bearish' };
-  const titleIcon = title.includes('India') ? '🇮🇳' : '🌐';
+  const titleIcon = title.includes('India') ? '🇮🇳' : '🇺🇸';
 
   return (
     <div className="news-feed">

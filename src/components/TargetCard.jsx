@@ -44,6 +44,9 @@ const TargetCard = ({ type }) => {
   const reliabilityPct = pred.recommendation?.reliability_score != null
     ? Math.round(pred.recommendation.reliability_score * 100)
     : null;
+  const rawConfPct = pred.raw_confidence != null ? Math.round(pred.raw_confidence * 100) : null;
+  const backtest = pred.backtest;
+  const risk = pred.risk;
   const freshnessLabel = pred.freshness_days == null
     ? 'freshness unknown'
     : pred.freshness_days === 0
@@ -68,6 +71,7 @@ const TargetCard = ({ type }) => {
         <span className={`tc-pill ${pred.is_stale ? 'is-stale' : 'is-fresh'}`}>{freshnessLabel}</span>
         {valAccPct != null && <span className="tc-pill">Val {valAccPct}%</span>}
         {reliabilityPct != null && <span className="tc-pill">Reliability {reliabilityPct}%</span>}
+        {rawConfPct != null && rawConfPct !== confPct && <span className="tc-pill">Raw {rawConfPct}%</span>}
       </div>
 
       {confPct > 0 && (
@@ -76,6 +80,22 @@ const TargetCard = ({ type }) => {
             <div className="tc-conf-fill" style={{ width: `${confPct}%` }} />
           </div>
           <span className="tc-conf-text">{confPct}% confidence</span>
+        </div>
+      )}
+
+      {backtest?.available && backtest.trade_count > 0 && (
+        <div className="tc-evidence">
+          <span>Backtest: {Math.round((backtest.win_rate || 0) * 100)}% win</span>
+          <span>Avg {backtest.average_return_pct}%</span>
+          <span>PF {backtest.profit_factor || 'n/a'}</span>
+        </div>
+      )}
+
+      {risk?.reward_risk != null && (
+        <div className={`tc-risk ${risk.actionable ? 'tc-risk--ok' : 'tc-risk--weak'}`}>
+          <span>R/R {risk.reward_risk}</span>
+          {risk.stop_loss != null && <span>SL ₹{risk.stop_loss}</span>}
+          {risk.do_not_enter_above != null && <span>No gap &gt; ₹{risk.do_not_enter_above}</span>}
         </div>
       )}
 
