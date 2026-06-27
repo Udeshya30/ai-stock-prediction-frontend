@@ -122,6 +122,17 @@
         color: var(--text-muted);
         flex-shrink: 0;
       }
+
+      .sn-category {
+        font-size: 0.62rem;
+        color: var(--text-secondary);
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.03);
+        border-radius: 999px;
+        padding: 0.1rem 0.38rem;
+        margin-left: auto;
+        white-space: nowrap;
+      }
     }
   }
 

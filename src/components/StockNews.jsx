@@ -27,6 +27,7 @@ const StockNews = () => {
               sentiment: item.sentiment > 0.1 ? "positive" : item.sentiment < -0.1 ? "negative" : "neutral",
               sentimentValue: parseFloat(item.sentiment).toFixed(2),
               emoji: item.emoji,
+              category: item.category || "Context",
               link: item.link || "",
             }))
             .sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -84,6 +85,7 @@ const StockNews = () => {
               </div>
               <div className="sn-footer">
                 <span className="sn-date">{news.date}</span>
+                <span className="sn-category">{news.category}</span>
                 <span className={`sentiment-tag ${news.sentiment}`}>
                   {news.emoji} {sentimentLabel[news.sentiment] || news.sentiment}
                 </span>

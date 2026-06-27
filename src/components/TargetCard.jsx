@@ -47,6 +47,9 @@ const TargetCard = ({ type }) => {
   const rawConfPct = pred.raw_confidence != null ? Math.round(pred.raw_confidence * 100) : null;
   const backtest = pred.backtest;
   const risk = pred.risk;
+  const market = pred.market;
+  const displayGates = [...(market?.gates || []), ...(pred.context_gates || [])];
+  const failedGates = pred.recommendation?.failed_gates || [];
   const freshnessLabel = pred.freshness_days == null
     ? 'freshness unknown'
     : pred.freshness_days === 0
@@ -85,9 +88,10 @@ const TargetCard = ({ type }) => {
 
       {backtest?.available && backtest.trade_count > 0 && (
         <div className="tc-evidence">
-          <span>Backtest: {Math.round((backtest.win_rate || 0) * 100)}% win</span>
+          <span>{backtest.validation_method === 'walk_forward' ? 'Walk-forward' : 'Backtest'}: {Math.round((backtest.win_rate || 0) * 100)}% win</span>
           <span>Avg {backtest.average_return_pct}%</span>
           <span>PF {backtest.profit_factor || 'n/a'}</span>
+          {backtest.folds != null && <span>{backtest.folds} folds</span>}
         </div>
       )}
 
@@ -96,6 +100,22 @@ const TargetCard = ({ type }) => {
           <span>R/R {risk.reward_risk}</span>
           {risk.stop_loss != null && <span>SL ₹{risk.stop_loss}</span>}
           {risk.do_not_enter_above != null && <span>No gap &gt; ₹{risk.do_not_enter_above}</span>}
+        </div>
+      )}
+
+      {displayGates.length > 0 && (
+        <div className="tc-gates">
+          {displayGates.map(gate => (
+            <span key={gate.name} className={gate.passed ? 'is-pass' : 'is-fail'} title={gate.reason}>
+              {gate.name}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {failedGates.length > 0 && (
+        <div className="tc-failed-gates">
+          Weak: {failedGates.slice(0, 3).map(g => g.name).join(', ')}
         </div>
       )}
 
