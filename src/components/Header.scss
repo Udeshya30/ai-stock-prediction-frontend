@@ -209,6 +209,28 @@
       font-variant-numeric: tabular-nums;
     }
 
+    .scanner-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      border: 1px solid rgba(79, 142, 247, 0.28);
+      background: rgba(79, 142, 247, 0.12);
+      color: #cfe0ff;
+      border-radius: 8px;
+      padding: 0.32rem 0.62rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: filter 0.15s ease, transform 0.15s ease;
+
+      &:hover {
+        filter: brightness(1.08);
+        transform: translateY(-1px);
+      }
+    }
+
     .logout-btn {
       border: 1px solid rgba(255, 75, 99, 0.28);
       background: rgba(255, 75, 99, 0.14);
@@ -262,6 +284,10 @@
       padding-inline: 0.5rem;
     }
 
+    .header-right .scanner-btn {
+      padding-inline: 0.5rem;
+    }
+
     .header-search-wrap {
       order: 3;
       flex: 1 1 100%;
@@ -284,6 +310,11 @@
   @media (max-width: 480px) {
     .brand-name { font-size: 0.95rem; }
     .header-right .active-chip { display: none; }
+    .header-right .scanner-btn {
+      span {
+        display: none;
+      }
+    }
     .header-right .logout-btn { font-size: 0.68rem; }
   }
 }

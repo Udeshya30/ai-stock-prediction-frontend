@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Zap, Clock } from 'lucide-react';
+import { BarChart3, Search, Zap, Clock } from 'lucide-react';
 import dayjs from 'dayjs';
 import './Header.scss';
 import { useStock } from '../context/StockContext';
 import { apiUrl } from '../config/api';
 
-const Header = ({ onLogout }) => {
+const Header = ({ onLogout, onMarketScannerClick }) => {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [selectedSuggestion, setSelectedSuggestion] = useState(null);
@@ -133,6 +133,10 @@ const Header = ({ onLogout }) => {
               {selectedStock.ticker.replace('.NS', '')}
             </span>
           )}
+          <button type="button" className="scanner-btn" onClick={onMarketScannerClick}>
+            <BarChart3 size={13} />
+            <span>Market Scanner</span>
+          </button>
           <div className="header-time">
             <Clock size={12} />
             <span>{time}</span>

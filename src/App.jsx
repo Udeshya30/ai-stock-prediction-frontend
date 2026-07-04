@@ -14,11 +14,13 @@ import StockNews from "./components/StockNews";
 import PipelineRunner from "./components/PipelineRunner";
 import LoginPage from "./components/LoginPage";
 import HomePage from "./components/HomePage";
+import MarketScanner from "./components/MarketScanner";
 
 const LOGIN_SESSION_KEY = "stockwhisper_auth";
 const VIEW_HOME = "home";
 const VIEW_LOGIN = "login";
 const VIEW_DASHBOARD = "dashboard";
+const VIEW_SCANNER = "scanner";
 
 const App = () => {
   const { selectedStock } = useStock();
@@ -57,6 +59,8 @@ const App = () => {
   const openLogin = () => setView(VIEW_LOGIN);
 
   const backToHome = () => setView(VIEW_HOME);
+  const openScanner = () => setView(VIEW_SCANNER);
+  const openDashboard = () => setView(VIEW_DASHBOARD);
 
   if (!isAuthenticated && view === VIEW_HOME) {
     return <HomePage onLoginClick={openLogin} />;
@@ -74,10 +78,12 @@ const App = () => {
 
   return (
     <div className="app-layout">
-      <Header onLogout={handleLogout} />
+      <Header onLogout={handleLogout} onMarketScannerClick={openScanner} />
       <main className="main-content">
 
-        {selectedStock ? (
+        {view === VIEW_SCANNER ? (
+          <MarketScanner onBackToPrediction={openDashboard} />
+        ) : selectedStock ? (
           <>
             <div className="dashboard-top-grid">
               <StockCard />
@@ -112,11 +118,12 @@ const App = () => {
           </>
         )}
 
-        {/* ── Always visible: News feed ── */}
-        <div className="news-grid">
-          <NewsFeed title="India News & Sentiment" />
-          <NewsFeed title="Global News & Sentiment" />
-        </div>
+        {view !== VIEW_SCANNER && (
+          <div className="news-grid">
+            <NewsFeed title="India News & Sentiment" />
+            <NewsFeed title="Global News & Sentiment" />
+          </div>
+        )}
 
       </main>
     </div>
