@@ -4,7 +4,7 @@
 }
 
 .ms-titlebar,
-.ms-controls,
+.ms-scan-panel,
 .ms-progress,
 .ms-error,
 .ms-research-summary,
@@ -71,10 +71,20 @@
   }
 }
 
-.ms-controls {
+.ms-scan-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.75fr);
+  gap: 1rem;
   padding: 1rem;
+  align-items: start;
+}
+
+.ms-controls {
   display: grid;
   gap: 1rem;
+  min-width: 0;
+  padding-right: 1rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .ms-label,
@@ -90,7 +100,7 @@
 
 .ms-radio-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.55rem;
 
   label {
@@ -121,7 +131,7 @@
 
 .ms-radio-grid--compact {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  max-width: 520px;
+  max-width: none;
 }
 
 .ms-number-grid {
@@ -169,6 +179,143 @@
 
 .ms-spin {
   animation: spin 1s linear infinite;
+}
+
+.ms-history {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+  align-self: stretch;
+}
+
+.ms-history-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+
+  span {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  p {
+    margin: 0.2rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+  }
+
+  button {
+    min-height: 1.95rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    border: 1px solid rgba(79, 142, 247, 0.3);
+    background: rgba(79, 142, 247, 0.1);
+    color: #cfe0ff;
+    border-radius: 8px;
+    padding: 0 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.ms-history-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.45rem;
+  max-height: 18rem;
+  overflow-y: auto;
+  padding-right: 0.1rem;
+
+  > button {
+    min-width: 0;
+    min-height: 3.25rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "title score"
+      "meta score";
+    align-items: center;
+    gap: 0.12rem 0.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.025);
+    color: var(--text-primary);
+    border-radius: 8px;
+    padding: 0.55rem 0.65rem;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover,
+    &.is-active {
+      border-color: rgba(79, 142, 247, 0.46);
+      background: rgba(79, 142, 247, 0.1);
+    }
+
+    strong {
+      grid-area: title;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      overflow: hidden;
+      color: var(--text-primary);
+      font-size: 0.78rem;
+      font-weight: 900;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      span {
+        color: var(--text-muted);
+        font-weight: 700;
+      }
+    }
+
+    small {
+      grid-area: meta;
+      min-width: 0;
+      overflow: hidden;
+      color: var(--text-secondary);
+      font-size: 0.7rem;
+      font-weight: 700;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    em {
+      grid-area: score;
+      justify-self: end;
+      max-width: 7rem;
+      border-radius: 999px;
+      background: rgba(16, 217, 124, 0.12);
+      color: var(--success);
+      padding: 0.18rem 0.48rem;
+      overflow: hidden;
+      font-size: 0.72rem;
+      font-style: normal;
+      font-weight: 900;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  > p {
+    grid-column: 1 / -1;
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+  }
 }
 
 .ms-progress {
@@ -717,6 +864,17 @@
 }
 
 @media (max-width: 1080px) {
+  .ms-scan-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .ms-controls {
+    padding-right: 0;
+    border-right: 0;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
   .ms-radio-grid,
   .ms-top-sections {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -734,6 +892,7 @@
   .ms-radio-grid--compact,
   .ms-number-grid,
   .ms-summary-row,
+  .ms-history-list,
   .ms-top-sections,
   .ms-summary-grid,
   .ms-detail-grid {
@@ -741,9 +900,22 @@
   }
 
   .ms-section-head,
+  .ms-history-head,
   .ms-expanded-lead {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .ms-history-list > button {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "meta"
+      "score";
+
+    em {
+      justify-self: start;
+    }
   }
 
   .ms-summary-row div {

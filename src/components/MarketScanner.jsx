@@ -92,6 +92,46 @@ const defaultForm = {
   minimumScore: 70,
 };
 
+const defaultProgress = { scanned: 0, total: 0, label: '' };
+const defaultSort = { key: 'overall_score', dir: 'desc' };
+
+const toFormFromSavedConfig = (config = {}) => ({
+  universe: config.universe || defaultForm.universe,
+  investmentType: config.investment_type || config.investmentType || defaultForm.investmentType,
+  maxStocks: config.max_stocks || config.maxStocks || defaultForm.maxStocks,
+  minimumScore: config.minimum_score || config.minimumScore || defaultForm.minimumScore,
+});
+
+const scannerKeyPart = (value, fallback) => {
+  const nextValue = value === undefined || value === null || value === '' ? fallback : value;
+  const numeric = Number(nextValue);
+  if (Number.isFinite(numeric) && Number.isInteger(numeric)) {
+    return String(numeric);
+  }
+  return String(nextValue);
+};
+
+const scannerKeyFromForm = (formValue = defaultForm) => [
+  scannerKeyPart(formValue.universe, defaultForm.universe),
+  scannerKeyPart(formValue.investmentType, defaultForm.investmentType),
+  scannerKeyPart(formValue.maxStocks, defaultForm.maxStocks),
+  scannerKeyPart(formValue.minimumScore, defaultForm.minimumScore),
+].join('|');
+
+const optionLabel = (options, value) => options.find((option) => option.value === value)?.label || value;
+
+const formatSavedAt = (value) => {
+  if (!value) return 'Saved scan';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Saved scan';
+  return date.toLocaleString([], {
+    day: '2-digit',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
 const formatPrice = (value) => {
   const numeric = Number(value);
   if (!Number.isFinite(numeric)) return '-';
@@ -173,11 +213,15 @@ const MarketScanner = ({ onBackToPrediction }) => {
   const { selectStock } = useStock();
   const [form, setForm] = useState(defaultForm);
   const [scanning, setScanning] = useState(false);
-  const [progress, setProgress] = useState({ scanned: 0, total: 0, label: '' });
   const [report, setReport] = useState(null);
+  const [progress, setProgress] = useState(defaultProgress);
   const [error, setError] = useState('');
-  const [sort, setSort] = useState({ key: 'overall_score', dir: 'desc' });
+  const [sort, setSort] = useState(defaultSort);
   const [expandedSymbol, setExpandedSymbol] = useState('');
+  const [restoringSavedScan, setRestoringSavedScan] = useState(false);
+  const [scanHistory, setScanHistory] = useState([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+  const [activeHistoryKey, setActiveHistoryKey] = useState('');
   const eventSourceRef = useRef(null);
 
   useEffect(() => {
@@ -186,6 +230,25 @@ const MarketScanner = ({ onBackToPrediction }) => {
         eventSourceRef.current.close();
       }
     };
+  }, []);
+
+  const fetchScanHistory = async () => {
+    setLoadingHistory(true);
+    try {
+      const response = await fetch(apiUrl('/api/market-scanner/history'));
+      const payload = await response.json();
+      if (payload?.success) {
+        setScanHistory(Array.isArray(payload.data) ? payload.data : []);
+      }
+    } catch {
+      // History is helpful, but scanner should remain usable if the backend is temporarily unavailable.
+    } finally {
+      setLoadingHistory(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchScanHistory();
   }, []);
 
   const rows = report?.rows || [];
@@ -212,6 +275,10 @@ const MarketScanner = ({ onBackToPrediction }) => {
 
   const updateForm = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+    setActiveHistoryKey('');
+    setReport(null);
+    setProgress(defaultProgress);
+    setExpandedSymbol('');
   };
 
   const handleSort = (key) => {
@@ -221,17 +288,47 @@ const MarketScanner = ({ onBackToPrediction }) => {
     }));
   };
 
-  const startScan = (e) => {
-    e.preventDefault();
+  const loadHistoryItem = async (item) => {
+    if (!item?.key) return;
+    setError('');
+    setRestoringSavedScan(true);
+    try {
+      const response = await fetch(apiUrl(`/api/market-scanner/history/${encodeURIComponent(item.key)}`));
+      const payload = await response.json();
+      const saved = payload?.data;
+      if (!payload?.success || !saved?.report) {
+        throw new Error(payload?.error || 'Saved scan not found.');
+      }
+
+      const restoredForm = toFormFromSavedConfig(saved.config);
+      const restoredProgress = {
+        scanned: saved.report.scanned || saved.summary?.scanned || 0,
+        total: saved.report.scanned || saved.summary?.scanned || 0,
+        label: saved.saved_at ? `Loaded saved scan from ${new Date(saved.saved_at).toLocaleString()}` : 'Loaded saved scan',
+      };
+      setForm(restoredForm);
+      setReport(saved.report);
+      setProgress(restoredProgress);
+      setExpandedSymbol('');
+      setActiveHistoryKey(saved.key || item.key);
+    } catch (historyError) {
+      setError(historyError.message || 'Could not load saved scanner result.');
+    } finally {
+      setRestoringSavedScan(false);
+    }
+  };
+
+  const runScan = () => {
     if (eventSourceRef.current) {
       eventSourceRef.current.close();
     }
 
     setScanning(true);
-    setReport(null);
     setError('');
     setExpandedSymbol('');
-    setProgress({ scanned: 0, total: 0, label: 'Starting scan' });
+    setActiveHistoryKey(scannerKeyFromForm(form));
+    const startingProgress = { scanned: 0, total: 0, label: 'Starting scan' };
+    setProgress(startingProgress);
 
     const params = new URLSearchParams({
       universe: form.universe,
@@ -246,16 +343,25 @@ const MarketScanner = ({ onBackToPrediction }) => {
     stream.onmessage = (event) => {
       const message = JSON.parse(event.data);
       if (message.type === 'started') {
-        setProgress({ scanned: 0, total: message.total || 0, label: 'Preparing scanner' });
+        const nextProgress = { scanned: 0, total: message.total || 0, label: 'Preparing scanner' };
+        setProgress(nextProgress);
       } else if (message.type === 'progress') {
-        setProgress({
+        const nextProgress = {
           scanned: message.scanned || 0,
           total: message.total || 0,
           label: `${message.symbol} ${message.status}`,
-        });
+        };
+        setProgress(nextProgress);
       } else if (message.type === 'complete') {
         setReport(message.report);
         setScanning(false);
+        const completeProgress = {
+          scanned: message.report?.scanned || progress.total || 0,
+          total: message.report?.scanned || progress.total || 0,
+          label: 'Scan complete',
+        };
+        setProgress(completeProgress);
+        fetchScanHistory();
         stream.close();
       } else if (message.type === 'error') {
         setError(message.message || 'Market scan failed.');
@@ -269,6 +375,11 @@ const MarketScanner = ({ onBackToPrediction }) => {
       setScanning(false);
       stream.close();
     };
+  };
+
+  const startScan = (e) => {
+    e.preventDefault();
+    runScan();
   };
 
   const viewAnalysis = async (row) => {
@@ -366,71 +477,117 @@ const MarketScanner = ({ onBackToPrediction }) => {
         </div>
       </div>
 
-      <form className="ms-controls" onSubmit={startScan}>
-        <div className="ms-control-group">
-          <span className="ms-label">Universe</span>
-          <div className="ms-radio-grid">
-            {universeOptions.map((option) => (
-              <label key={option.value} className={form.universe === option.value ? 'is-active' : ''}>
-                <input
-                  type="radio"
-                  name="universe"
-                  value={option.value}
-                  checked={form.universe === option.value}
-                  onChange={() => updateForm('universe', option.value)}
-                />
-                <span>{option.label}</span>
-              </label>
-            ))}
+      <div className="ms-scan-panel">
+        <form className="ms-controls" onSubmit={startScan}>
+          <div className="ms-control-group">
+            <span className="ms-label">Universe</span>
+            <div className="ms-radio-grid">
+              {universeOptions.map((option) => (
+                <label key={option.value} className={form.universe === option.value ? 'is-active' : ''}>
+                  <input
+                    type="radio"
+                    name="universe"
+                    value={option.value}
+                    checked={form.universe === option.value}
+                    onChange={() => updateForm('universe', option.value)}
+                  />
+                  <span>{option.label}</span>
+                </label>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className="ms-control-group">
-          <span className="ms-label">Investment Type</span>
-          <div className="ms-radio-grid ms-radio-grid--compact">
-            {investmentOptions.map((option) => (
-              <label key={option.value} className={form.investmentType === option.value ? 'is-active' : ''}>
-                <input
-                  type="radio"
-                  name="investmentType"
-                  value={option.value}
-                  checked={form.investmentType === option.value}
-                  onChange={() => updateForm('investmentType', option.value)}
-                />
-                <span>{option.label}</span>
-              </label>
-            ))}
+          <div className="ms-control-group">
+            <span className="ms-label">Investment Type</span>
+            <div className="ms-radio-grid ms-radio-grid--compact">
+              {investmentOptions.map((option) => (
+                <label key={option.value} className={form.investmentType === option.value ? 'is-active' : ''}>
+                  <input
+                    type="radio"
+                    name="investmentType"
+                    value={option.value}
+                    checked={form.investmentType === option.value}
+                    onChange={() => updateForm('investmentType', option.value)}
+                  />
+                  <span>{option.label}</span>
+                </label>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className="ms-number-grid">
-          <label>
-            <span>Maximum Stocks</span>
-            <input
-              type="number"
-              min="1"
-              max="50"
-              value={form.maxStocks}
-              onChange={(e) => updateForm('maxStocks', e.target.value)}
-            />
-          </label>
-          <label>
-            <span>Minimum Score</span>
-            <input
-              type="number"
-              min="0"
-              max="100"
-              value={form.minimumScore}
-              onChange={(e) => updateForm('minimumScore', e.target.value)}
-            />
-          </label>
-        </div>
+          <div className="ms-number-grid">
+            <label>
+              <span>Maximum Stocks</span>
+              <input
+                type="number"
+                min="1"
+                max="50"
+                value={form.maxStocks}
+                onChange={(e) => updateForm('maxStocks', e.target.value)}
+              />
+            </label>
+            <label>
+              <span>Minimum Score</span>
+              <input
+                type="number"
+                min="0"
+                max="100"
+                value={form.minimumScore}
+                onChange={(e) => updateForm('minimumScore', e.target.value)}
+              />
+            </label>
+          </div>
 
-        <button type="submit" className="ms-start" disabled={scanning}>
-          {scanning ? <RefreshCw size={15} className="ms-spin" /> : <Play size={15} />}
-          {scanning ? 'Scanning...' : 'Start Scan'}
-        </button>
-      </form>
+          <button type="submit" className="ms-start" disabled={scanning}>
+            {scanning || report ? <RefreshCw size={15} className={scanning ? 'ms-spin' : ''} /> : <Play size={15} />}
+            {scanning ? 'Scanning...' : report ? 'Refresh Scan' : 'Start Scan'}
+          </button>
+        </form>
+
+        <aside className="ms-history">
+          <div className="ms-history-head">
+            <div>
+              <span>Previous Scans</span>
+              <p>Latest 5 saved combinations.</p>
+            </div>
+            <button type="button" onClick={fetchScanHistory} disabled={loadingHistory}>
+              <RefreshCw size={13} className={loadingHistory ? 'ms-spin' : ''} />
+              Refresh
+            </button>
+          </div>
+
+          <div className="ms-history-list">
+            {scanHistory.map((item) => {
+              const itemForm = toFormFromSavedConfig(item.config);
+              const summary = item.summary || {};
+              return (
+                <button
+                  type="button"
+                  key={item.key}
+                  className={activeHistoryKey === item.key ? 'is-active' : ''}
+                  onClick={() => loadHistoryItem(item)}
+                >
+                  <strong>
+                    {optionLabel(universeOptions, itemForm.universe)}
+                    <span>/</span>
+                    {optionLabel(investmentOptions, itemForm.investmentType)}
+                  </strong>
+                  <small>
+                    Max {itemForm.maxStocks} - Min {itemForm.minimumScore} - {formatSavedAt(item.saved_at)}
+                  </small>
+                  <em>
+                    {summary.top_symbol ? `${summary.top_symbol} ` : ''}
+                    {Number.isFinite(Number(summary.top_score)) ? formatScore(summary.top_score) : `${summary.row_count || 0} rows`}
+                  </em>
+                </button>
+              );
+            })}
+            {!scanHistory.length && (
+              <p>{loadingHistory ? 'Loading saved scans...' : 'No saved scanner history yet. Start a scan to create one.'}</p>
+            )}
+          </div>
+        </aside>
+      </div>
 
       {(scanning || progress.total > 0) && (
         <div className="ms-progress">
@@ -446,6 +603,15 @@ const MarketScanner = ({ onBackToPrediction }) => {
       )}
 
       {error && <div className="ms-error">{error}</div>}
+
+      {restoringSavedScan && !report && (
+        <div className="ms-progress">
+          <div className="ms-progress-head">
+            <span>Restoring saved scanner result</span>
+            <strong>...</strong>
+          </div>
+        </div>
+      )}
 
       {report && (
         <>
