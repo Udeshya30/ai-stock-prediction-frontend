@@ -53,7 +53,7 @@ const topSectionScoreKeys = {
   growth: 'growth_score',
   lowest_risk: 'risk_score',
   highest_confidence: 'confidence_score',
-  best_overall: 'opportunity_score',
+  best_overall: 'quality_score',
 };
 
 const columns = [
@@ -70,7 +70,10 @@ const columns = [
   { key: 'risk_score', label: 'Risk', score: true },
   { key: 'backtest_score', label: 'Backtest', score: true },
   { key: 'confidence_score', label: 'Confidence', score: true },
+  { key: 'safety_score', label: 'Safety', score: true },
+  { key: 'quality_score', label: 'Quality', score: true },
   { key: 'overall_score', label: 'Overall', score: true },
+  { key: 'reward_risk', label: 'R/R' },
   { key: 'recommendation', label: 'Recommendation' },
 ];
 
@@ -182,7 +185,13 @@ const flattenRow = (row) => {
     Risk: row.risk_score,
     Backtest: row.backtest_score,
     Confidence: row.confidence_score,
+    Safety: row.safety_score,
+    Quality: row.quality_score,
     Overall: row.overall_score,
+    RewardRisk: row.reward_risk,
+    EntryZone: row.entry_zone_low && row.entry_zone_high ? `${row.entry_zone_low} - ${row.entry_zone_high}` : '',
+    StopLoss: row.stop_loss,
+    Target: row.target,
     Recommendation: row.recommendation,
     WhyThisStock: row.why_this_stock,
     WhyNotHigher: row.why_not_higher,
@@ -301,14 +310,9 @@ const MarketScanner = ({ onBackToPrediction }) => {
       }
 
       const restoredForm = toFormFromSavedConfig(saved.config);
-      const restoredProgress = {
-        scanned: saved.report.scanned || saved.summary?.scanned || 0,
-        total: saved.report.scanned || saved.summary?.scanned || 0,
-        label: saved.saved_at ? `Loaded saved scan from ${new Date(saved.saved_at).toLocaleString()}` : 'Loaded saved scan',
-      };
       setForm(restoredForm);
       setReport(saved.report);
-      setProgress(restoredProgress);
+      setProgress(defaultProgress);
       setExpandedSymbol('');
       setActiveHistoryKey(saved.key || item.key);
     } catch (historyError) {
@@ -589,7 +593,7 @@ const MarketScanner = ({ onBackToPrediction }) => {
         </aside>
       </div>
 
-      {(scanning || progress.total > 0) && (
+      {scanning && (
         <div className="ms-progress">
           <div className="ms-progress-head">
             <span>Scanning {progress.scanned} / {progress.total} stocks</span>
@@ -631,6 +635,7 @@ const MarketScanner = ({ onBackToPrediction }) => {
               <div><span>Neutral</span><strong>{summary.neutral ?? 0}</strong></div>
               <div><span>Bearish</span><strong>{summary.bearish ?? 0}</strong></div>
               <div><span>Strong Buy</span><strong>{summary.strong_buy_candidates ?? 0}</strong></div>
+              <div><span>Watchlist</span><strong>{summary.tradable_watchlist ?? 0}</strong></div>
               <div><span>High Confidence</span><strong>{summary.high_confidence_opportunities ?? 0}</strong></div>
               <div><span>Strongest Sector</span><strong>{summary.strongest_sector || 'N/A'}</strong></div>
               <div><span>Weakest Sector</span><strong>{summary.weakest_sector || 'N/A'}</strong></div>
@@ -702,6 +707,8 @@ const MarketScanner = ({ onBackToPrediction }) => {
                                 <span className={`ms-rec ms-rec--${String(row.recommendation).toLowerCase().replace(/\s+/g, '-')}`}>
                                   {row.recommendation}
                                 </span>
+                              ) : column.key === 'reward_risk' ? (
+                                Number.isFinite(Number(row.reward_risk)) ? Number(row.reward_risk).toFixed(2) : 'N/A'
                               ) : (
                                 row[column.key]
                               )}
@@ -731,7 +738,32 @@ const MarketScanner = ({ onBackToPrediction }) => {
                                     <p>{row.why_this_stock}</p>
                                     <p>{row.why_not_higher}</p>
                                   </div>
-                                  <ScorePill value={row.overall_score} />
+                                  <ScorePill value={row.quality_score ?? row.overall_score} />
+                                </div>
+
+                                <div className="ms-safety-panel">
+                                  <article>
+                                    <span>Trade Plan</span>
+                                    <div className="ms-plan-grid">
+                                      <b>Entry {row.entry_zone_low && row.entry_zone_high ? `${formatPrice(row.entry_zone_low)} - ${formatPrice(row.entry_zone_high)}` : 'N/A'}</b>
+                                      <b>Target {row.target ? formatPrice(row.target) : 'N/A'}</b>
+                                      <b>Stop {row.stop_loss ? formatPrice(row.stop_loss) : 'N/A'}</b>
+                                      <b>R/R {Number.isFinite(Number(row.reward_risk)) ? Number(row.reward_risk).toFixed(2) : 'N/A'}</b>
+                                      <b>Do Not Enter Above {row.do_not_enter_above ? formatPrice(row.do_not_enter_above) : 'N/A'}</b>
+                                    </div>
+                                    {row.risk_plan?.reason && <p>{row.risk_plan.reason}</p>}
+                                  </article>
+                                  <article>
+                                    <span>Safety Gates</span>
+                                    <div className="ms-gate-list">
+                                      {(row.safety?.gates || []).map((gate) => (
+                                        <em key={gate.name} className={gate.passed ? 'is-pass' : 'is-fail'}>
+                                          {gate.name}
+                                        </em>
+                                      ))}
+                                    </div>
+                                    {row.safety?.reason && <p>{row.safety.reason}</p>}
+                                  </article>
                                 </div>
 
                                 <div className="ms-detail-grid">

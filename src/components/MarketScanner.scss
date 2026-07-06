@@ -581,7 +581,7 @@
 
 .ms-table-wrap table {
   width: 100%;
-  min-width: 1480px;
+  min-width: 1720px;
   border-collapse: collapse;
 
   th,
@@ -711,6 +711,11 @@
     color: var(--success);
   }
 
+  &--no-trade {
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--text-secondary);
+  }
+
   &--watch-closely {
     background: var(--warning-dim);
     color: var(--warning);
@@ -754,6 +759,81 @@
     color: var(--text-secondary);
     font-size: 0.8rem;
     max-width: 110ch;
+  }
+}
+
+.ms-safety-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+
+  article {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.025);
+    border-radius: 8px;
+    padding: 0.85rem;
+  }
+
+  span {
+    display: block;
+    margin-bottom: 0.55rem;
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  p {
+    margin: 0.6rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.76rem;
+  }
+}
+
+.ms-plan-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+
+  b {
+    min-height: 1.8rem;
+    display: flex;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.025);
+    border-radius: 8px;
+    padding: 0.35rem 0.5rem;
+    color: var(--text-primary);
+    font-size: 0.74rem;
+    font-weight: 800;
+  }
+}
+
+.ms-gate-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+
+  em {
+    border-radius: 999px;
+    padding: 0.16rem 0.45rem;
+    font-size: 0.68rem;
+    font-style: normal;
+    font-weight: 900;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    &.is-pass {
+      background: rgba(16, 217, 124, 0.12);
+      color: var(--success);
+      border-color: rgba(16, 217, 124, 0.24);
+    }
+
+    &.is-fail {
+      background: rgba(255, 75, 99, 0.12);
+      color: #ff9aaa;
+      border-color: rgba(255, 75, 99, 0.24);
+    }
   }
 }
 
@@ -882,6 +962,7 @@
 
   .ms-summary-grid,
   .ms-top-sections--research,
+  .ms-safety-panel,
   .ms-detail-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -895,6 +976,8 @@
   .ms-history-list,
   .ms-top-sections,
   .ms-summary-grid,
+  .ms-safety-panel,
+  .ms-plan-grid,
   .ms-detail-grid {
     grid-template-columns: 1fr;
   }
