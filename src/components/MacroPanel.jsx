@@ -4,6 +4,7 @@ import { apiUrl } from "../config/api";
 import { MdCurrencyExchange } from "react-icons/md";
 import { FaUniversity, FaOilCan } from "react-icons/fa";
 import { GiGoldBar } from "react-icons/gi";
+import PanelBarLoader from "./PanelBarLoader";
 
 const MacroPanel = () => {
   const [metrics, setMetrics] = useState([]);
@@ -72,9 +73,7 @@ const MacroPanel = () => {
         <div className="macro-grid">
           {[1, 2, 3, 4].map(i => (
             <div key={i} className="macro-box macro-box--skeleton">
-              <span className="shimmer" style={{ display: 'block', height: 10, width: '60%', borderRadius: 4, marginBottom: 8 }} />
-              <span className="shimmer" style={{ display: 'block', height: 18, width: '80%', borderRadius: 4, marginBottom: 6 }} />
-              <span className="shimmer" style={{ display: 'block', height: 10, width: '40%', borderRadius: 4 }} />
+              <PanelBarLoader label="Loading macro metric" rows={3} />
             </div>
           ))}
         </div>

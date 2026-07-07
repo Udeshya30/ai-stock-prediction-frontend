@@ -3,10 +3,11 @@ import React from 'react';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import './TargetCard.scss';
 import { useStock } from '../context/StockContext';
+import PanelBarLoader from './PanelBarLoader';
 
 const TargetCard = ({ type }) => {
   const isShort = type === 'short';
-  const { stockData, selectedStock } = useStock();
+  const { stockData, selectedStock, pipelineRunning } = useStock();
   const pred = isShort ? stockData?.short_term : stockData?.long_term;
   const label = isShort ? 'Short Term' : 'Long Term';
 
@@ -20,6 +21,18 @@ const TargetCard = ({ type }) => {
   }
 
   if (!pred) {
+    if (!stockData || pipelineRunning) {
+      return (
+        <div className="target-card target-empty target-loading">
+          <span className="section-label">{label}</span>
+          <PanelBarLoader
+            label={isShort ? 'Generating short-term target' : 'Generating long-term target'}
+            hint={isShort ? 'Training short-term model.' : 'Training long-term model.'}
+          />
+        </div>
+      );
+    }
+
     return (
       <div className="target-card target-empty">
         <span className="section-label">{label}</span>
@@ -50,6 +63,7 @@ const TargetCard = ({ type }) => {
   const market = pred.market;
   const displayGates = [...(market?.gates || []), ...(pred.context_gates || [])];
   const failedGates = pred.recommendation?.failed_gates || [];
+  const modelQuality = pred.recommendation?.model_quality;
   const freshnessLabel = pred.freshness_days == null
     ? 'freshness unknown'
     : pred.freshness_days === 0
@@ -74,6 +88,7 @@ const TargetCard = ({ type }) => {
         <span className={`tc-pill ${pred.is_stale ? 'is-stale' : 'is-fresh'}`}>{freshnessLabel}</span>
         {valAccPct != null && <span className="tc-pill">Val {valAccPct}%</span>}
         {reliabilityPct != null && <span className="tc-pill">Reliability {reliabilityPct}%</span>}
+        {modelQuality?.label && <span className={`tc-pill tc-quality tc-quality--${modelQuality.level || 'caution'}`}>{modelQuality.label}</span>}
         {rawConfPct != null && rawConfPct !== confPct && <span className="tc-pill">Raw {rawConfPct}%</span>}
       </div>
 

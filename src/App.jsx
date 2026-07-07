@@ -12,6 +12,8 @@ import TargetCard from "./components/TargetCard";
 import NewsFeed from "./components/NewsFeed";
 import StockNews from "./components/StockNews";
 import PipelineRunner from "./components/PipelineRunner";
+import LLMVerificationPanel from "./components/LLMVerificationPanel";
+import ForwardPerformancePanel from "./components/ForwardPerformancePanel";
 import LoginPage from "./components/LoginPage";
 import HomePage from "./components/HomePage";
 import MarketScanner from "./components/MarketScanner";
@@ -107,6 +109,8 @@ const App = () => {
               </div>
             </div>
 
+            <LLMVerificationPanel />
+            <ForwardPerformancePanel />
             <PipelineRunner />
             <FiiDiiPanel />
           </>

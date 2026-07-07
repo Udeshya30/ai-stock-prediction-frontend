@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FiExternalLink } from 'react-icons/fi';
 import './NewsFeed.scss';
 import { apiUrl } from '../config/api';
+import PanelBarLoader from './PanelBarLoader';
 
 const NewsFeed = ({ title }) => {
   const [newsList, setNewsList] = useState([]);
@@ -92,7 +93,13 @@ const NewsFeed = ({ title }) => {
       </div>
       <div className="news-scroll">
         {loading ? (
-          <div className="nf-state">Loading…</div>
+          <div className="nf-skeleton-list">
+            {[1, 2, 3, 4].map((item) => (
+              <div key={item} className="news-item news-item--skeleton">
+                <PanelBarLoader label={`Loading ${title}`} rows={3} />
+              </div>
+            ))}
+          </div>
         ) : error ? (
           <div className="nf-state nf-error">{error}</div>
         ) : newsList.length === 0 ? (

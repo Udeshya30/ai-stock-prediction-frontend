@@ -3,6 +3,7 @@ import { FiExternalLink } from "react-icons/fi";
 import "./StockNews.scss";
 import { useStock } from "../context/StockContext";
 import { apiUrl } from "../config/api";
+import PanelBarLoader from "./PanelBarLoader";
 
 const StockNews = () => {
   const { selectedStock } = useStock();
@@ -56,8 +57,7 @@ const StockNews = () => {
           <div className="sn-state">
             {[1,2,3,4].map(i => (
               <div key={i} className="sn-skeleton">
-                <span className="shimmer" style={{ display:'block', height:12, width:'90%', borderRadius:4, marginBottom:6 }} />
-                <span className="shimmer" style={{ display:'block', height:12, width:'60%', borderRadius:4 }} />
+                <PanelBarLoader label={`Loading ${ticker} news`} rows={3} />
               </div>
             ))}
           </div>

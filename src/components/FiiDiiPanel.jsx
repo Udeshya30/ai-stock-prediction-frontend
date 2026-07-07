@@ -4,6 +4,7 @@ import './FiiDiiPanel.scss';
 import { apiUrl } from '../config/api';
 import { FaGlobeAmericas, FaHome, FaBroadcastTower } from 'react-icons/fa';
 import { MdDateRange } from 'react-icons/md';
+import PanelBarLoader from './PanelBarLoader';
 
 const FiiDiiPanel = () => {
   const [data, setData]       = useState(null);
@@ -58,9 +59,7 @@ const FiiDiiPanel = () => {
         <div className="fd-grid">
           {[0, 1].map(i => (
             <div key={i} className="fd-card fd-card--skeleton">
-              <span className="shimmer" style={{ display: 'block', height: 10, width: '55%', borderRadius: 4, marginBottom: 8 }} />
-              <span className="shimmer" style={{ display: 'block', height: 22, width: '75%', borderRadius: 4, marginBottom: 6 }} />
-              <span className="shimmer" style={{ display: 'block', height: 10, width: '40%', borderRadius: 4 }} />
+              <PanelBarLoader label="Loading institutional flow" rows={3} />
             </div>
           ))}
         </div>

@@ -3,9 +3,10 @@ import React from 'react';
 import './PatternDetection.scss';
 import { useStock } from '../context/StockContext';
 import { BiTrendingUp, BiTrendingDown, BiLineChart } from 'react-icons/bi';
+import PanelBarLoader from './PanelBarLoader';
 
 const PatternDetection = () => {
-  const { stockData, selectedStock } = useStock();
+  const { stockData, selectedStock, pipelineRunning } = useStock();
   const pattern = stockData?.pattern;
 
   if (!selectedStock) return null;
@@ -20,6 +21,21 @@ const PatternDetection = () => {
   const action = pattern?.action || 'ignore';
   const confirmation = (pattern?.confirmation || 'none').replaceAll('_', ' ');
   const verdict = pattern?.verdict || (action === 'ignore' ? 'Ignore' : 'Watch Closely');
+
+  if (!stockData || (pipelineRunning && !pattern)) {
+    return (
+      <div className="pattern-card pattern-loading">
+        <span className="pattern-icon"><BiLineChart /></span>
+        <div className="pattern-body">
+          <span className="section-label">Pattern Detected</span>
+          <PanelBarLoader
+            label="Detecting candlestick patterns"
+            hint="Waiting for pattern analysis."
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`pattern-card pattern-${typeClass}`}>

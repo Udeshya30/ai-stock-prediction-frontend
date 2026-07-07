@@ -33,6 +33,11 @@
     }
   }
 
+  &.target-loading {
+    min-height: 5.6rem;
+    justify-content: center;
+  }
+
   .tc-header {
     display: flex;
     align-items: center;
@@ -95,6 +100,25 @@
     &.is-stale {
       color: var(--warning);
       border-color: rgba(255,167,38,0.24);
+    }
+
+    &.tc-quality--success {
+      color: var(--success);
+      border-color: rgba(16,217,124,0.28);
+      background: var(--success-dim);
+    }
+
+    &.tc-quality--caution,
+    &.tc-quality--warning {
+      color: var(--warning);
+      border-color: rgba(255,167,38,0.28);
+      background: var(--warning-dim);
+    }
+
+    &.tc-quality--danger {
+      color: var(--danger);
+      border-color: rgba(255,75,99,0.28);
+      background: var(--danger-dim);
     }
   }
 

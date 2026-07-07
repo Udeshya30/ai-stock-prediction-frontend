@@ -71,6 +71,8 @@ export const StockProvider = ({ children }) => {
             long_term: msg.predictions.long_term,
             pattern: msg.predictions.pattern,
             sector_analysis: msg.predictions.sector_analysis,
+            llm_verification: msg.predictions.llm_verification,
+            forward_tracking: msg.predictions.forward_tracking,
           } : prev);
           setPipelineComplete(true);
           setPipelineRunning(false);

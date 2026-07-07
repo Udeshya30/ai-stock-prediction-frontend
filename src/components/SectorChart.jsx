@@ -5,6 +5,7 @@ import {
 } from 'recharts';
 import './SectorChart.scss';
 import { useStock } from '../context/StockContext';
+import PanelBarLoader from './PanelBarLoader';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -22,7 +23,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const SectorChart = () => {
-  const { stockData, selectedStock } = useStock();
+  const { stockData, selectedStock, pipelineRunning } = useStock();
   const sa = stockData?.sector_analysis;
 
   if (!selectedStock) {
@@ -30,6 +31,18 @@ const SectorChart = () => {
       <div className="sector-chart sector-chart--empty">
         <span className="section-label">Sector Performance</span>
         <div className="sc-empty">Select a stock to compare vs sector</div>
+      </div>
+    );
+  }
+
+  if (!stockData || (pipelineRunning && !sa)) {
+    return (
+      <div className="sector-chart sector-chart--empty">
+        <span className="section-label">Sector Performance</span>
+        <PanelBarLoader
+          label="Comparing stock with sector"
+          hint="Waiting for sector analysis."
+        />
       </div>
     );
   }

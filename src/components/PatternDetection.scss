@@ -35,6 +35,15 @@
     &::after { background: var(--warning); }
   }
 
+  &.pattern-loading {
+    align-items: center;
+    min-height: 6.35rem;
+
+    .pattern-icon {
+      color: var(--accent);
+    }
+  }
+
   .pattern-icon {
     display: inline-flex;
     align-items: center;
